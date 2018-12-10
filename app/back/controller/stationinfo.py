@@ -6,8 +6,7 @@ from app.back import back
 from app.common.auth import admin_login_req
 from app.back.logic.stationinfo import insert_stationinfo_action
 from app.models import StationInfo
-from app import db, app
-from app.common.util import error_response, success_response
+from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
 
 
@@ -30,10 +29,9 @@ def insert_stationinfo():
 
     try:
         # 插入传入的数据和数据模型不一致的时候，或者由于其他原因插入失败的时候，或报异常
-        db.session.add(new_station_info)
-        db.session.commit()
+        new_station_info.add_one()
     except Exception as e:
-        app.logger.error(e)
-        app.logger.error(error_code['1000_1001'])
+        error_logger(e)
+        error_logger(error_code['1000_1001'])
         return error_response(error_code['1000_1001'])
     return success_response()

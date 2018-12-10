@@ -2,12 +2,12 @@
 '种猪信息'
 
 from flask import request, json
+import time
 from app.back import back
 from app.common.auth import admin_login_req
 from app.back.logic.piginfo import insert_piginfo_action
 from app.models import PigInfo
-from app import db, app
-from app.common.util import error_response, success_response
+from app.common.util import error_response, success_response, error_logger, warning_logger, info_logger
 from app.common.errorcode import error_code
 
 
@@ -30,15 +30,15 @@ def insert_piginfo():
         bodywidth=request_data.get('bodywidth'),
         bodyheight=request_data.get('bodyheight'),
         bodytemperature=request_data.get('bodytemperature'),
-        stationtime=request_data.get('stationtime')
+        stationtime=request_data.get('stationtime'),
+        systime = int(time.time())
     ))
 
     try:
         # 插入传入的数据和数据模型不一致的时候，或者由于其他原因插入失败的时候，或报异常
-        db.session.add(new_pig_info)
-        db.session.commit()
+        new_pig_info.add_one()
     except Exception as e:
-        app.logger.error(e)
-        app.logger.error(error_code['1000_0001'])
+        error_logger(e)
+        error_logger(error_code['1000_0001'])
         return error_response(error_code['1000_0001'])
     return success_response()
