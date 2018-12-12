@@ -1,4 +1,6 @@
 # coding: utf8
+import re
+
 
 def param_err(key):
     '''
@@ -35,11 +37,12 @@ def check_len(param, length, type='eq'):
     :return:
     '''
     if (type == 'eq'):
-        return len(param) == length
+        return len(str(param)) == length
     elif (type == 'lt'):
-        return len(param) < length
+        return len(str(param)) < length
     elif (type == 'gt'):
-        return len(param) > length
+        return len(str(param)) > length
+
 
 def check_is_timestamp_integer(ts):
     '''
@@ -48,3 +51,66 @@ def check_is_timestamp_integer(ts):
     :return: boolean
     '''
     return len(str(ts)) == 10
+
+
+def check_is_phone(phone):
+    '''
+    检查是否是手机号码
+    :param phone: 手机号码
+    :return:
+    '''
+    return len(str(phone)) == 11
+
+
+def check_number_str_len(number_str='', len=0):
+    '''
+    检查数字字符串的长度
+    :param number_str: 要校验的参数
+    :return: True 表示匹配成功
+    '''
+
+    return re.match('^[0-9]{' + str(len) + '}$', str(number_str)) != None
+
+
+def check_in(param, tu):
+    '''
+    检测给定的参数是否在 tuple 中
+
+    tu = ('a', 'b', 'c', 'd')
+
+    'a' in tu  True
+
+    'w' in tu  False
+    :param param:
+    :param tuple:
+    :return:
+    '''
+    return param in tu
+
+
+def check_is_email(email):
+    '''
+    检查是否是邮箱
+    :return:
+    '''
+    ret = re.match('[a-zA-Z0-9][\w\.-]+@(?:[A-Za-z0-9]+\.)+[A-Za-z]+$', str(email))
+    return ret != None
+
+
+def check_is_str(param):
+    '''
+    检查是否是字符串
+    :param param:
+    :return:
+    '''
+
+    return type(param) == str
+
+
+def check_str_len(param='', min=0, max=0):
+    '''
+    检查字符串是否是超过了指定长度
+    :param param:
+    :return:
+    '''
+    return len(str(param)) >= min and len(str(param)) <= max

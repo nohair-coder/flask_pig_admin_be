@@ -72,3 +72,12 @@ LONGBLOB 或 LONGTEXT：4294967295 (2^32-1)个字符
 ENUM('value1','value2',...)：可以总共有65535个不同的值
  
 SET('value1','value2',...)：最多有64个成员 
+
+
+## 2、TINYTEXT、TEXT、MEDIUMTEXT、LONGTEXT
+- [MySQL TEXT数据类型的最大长度 ](http://blog.sina.com.cn/s/blog_71f8aa010100vusp.html)
+    - TINYTEXT 256 bytes
+    - TEXT 65535 bytes = 64 kb
+    - MEDIUMTEXT 16,777,215 bytes = 16MB
+    - LONGTEXT 4,294,967,295 bytes = 4GB
+

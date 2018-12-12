@@ -1,11 +1,11 @@
 # coding: utf8
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from .config import databaseURI
+from .config import database_URI
 import pymysql # mysql 连接驱动
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = databaseURI
+app.config['SQLALCHEMY_DATABASE_URI'] = database_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)

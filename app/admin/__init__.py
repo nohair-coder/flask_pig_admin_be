@@ -1,6 +1,6 @@
 # coding: utf8
 from flask import Blueprint
 
-admin = Blueprint('admin', __name__, url_prefix='/back')
+admin = Blueprint('admin', __name__)
 
-import app.admin.views
+import app.admin.controller.notificationcontact

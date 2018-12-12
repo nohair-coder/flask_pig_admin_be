@@ -11,7 +11,7 @@ from app.common.util import error_response, success_response, error_logger, warn
 from app.common.errorcode import error_code
 
 
-@back.route('/piginfo/insert_piginfo/', methods=['POST'])
+@back.route('/back/piginfo/insert_piginfo/', methods=['POST'])
 @admin_login_req
 def insert_piginfo():
     '''
