@@ -21,7 +21,7 @@ ret = {
 }
 ```
 
-### `POST` /back/piginfo/insert_stationinfo/
+### `POST` /back/piginfo/stationinfo/
 __params__
 - `stationid` `string(12)` 测定站 id
 - `status` `string(5)` 测定站机器的运行状态（'on', 'off'）
