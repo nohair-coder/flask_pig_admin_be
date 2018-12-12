@@ -15,18 +15,18 @@ mail_pass = mail_config['mail_pass']  # 口令
 sender = mail_config['mail_user']  # sender 必须与 user 一直
 
 
-def send_mail(title, content, receiver):
+def send_mail(title, content, receivers):
     '''
     发送邮件
     :return:
     '''
     # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
     # receivers 是 tuple，可以群发
-    receivers = [receiver]
+    # receivers = [receiver]
 
     message = MIMEText(content, 'html')  # 邮件的正文内容
     message['From'] = formataddr((mail_config['sender_name'], mail_config['mail_user']))
-    message['To'] = formataddr(('种猪信息测定管理系统用户', receiver))
+    message['To'] = formataddr(('种猪信息测定管理系统用户', 'all user'))
     message['Subject'] = Header(title)  # 邮件主题
 
     try:

@@ -11,7 +11,7 @@ class NotificationContact(db.Model):
     __tablename__ = 'notification_contact'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100))  # 100 位字符串
+    email = db.Column(db.String(100), unique=True)  # 100 位字符串
     comment = db.Column(db.String(255))  # 255 位字符串
 
     def __init__(self, params):
@@ -25,6 +25,10 @@ class NotificationContact(db.Model):
         '''
         db.session.add(self)
         db.session.commit()
+
+    def get_prev(limit=50):
+        # 或者 NotificationContact.query.with_entities(NotificationContact.email).limit(50).all()
+        return db.session.query(NotificationContact.email).limit(limit).all()
 
     def __repr__(self):
         return '<NotificationContact %r>' % self.email
