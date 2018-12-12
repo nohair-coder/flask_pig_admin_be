@@ -12,4 +12,6 @@ error_code = {
     '1000_3001': '1000_3001: 邮件发送失败',
     # `app/admin/controller/notificationcontact`
     '1000_4001': '1000_4001: 通知邮箱添加失败',
+    # `app/admin/controller/dashboard`
+    '1000_5001': '1000_5001: 获取测定站信息失败',
 }

@@ -4,3 +4,4 @@ from flask import Blueprint
 admin = Blueprint('admin', __name__)
 
 import app.admin.controller.notificationcontact
+import app.admin.controller.dashboard
