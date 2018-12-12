@@ -10,7 +10,7 @@ class PigInfo(db.Model):
     '''
     __tablename__ = 'pig_info'  # 表名
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     earid = db.Column(db.String(12))  # 12 位字符串
     stationid = db.Column(db.String(12))  # 12 位字符串
     foodintake = db.Column(db.Float())  # 小数

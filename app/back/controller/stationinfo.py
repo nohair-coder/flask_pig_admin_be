@@ -4,7 +4,7 @@
 from flask import request, json
 from app.back import back
 from app.common.auth import admin_login_req
-from app.back.logic.stationinfo import insert_stationinfo_action
+from app.back.logic.stationinfo import stationinfo_action
 from app.models import StationInfo, NotificationContact, NotificationRecord
 from app.common.util import error_response, success_response, error_logger
 from app.config import station_errorcode_on_normal_code
@@ -14,26 +14,32 @@ from app.common.util import asyncFunc
 from app.common.util.time import get_now_timestamp
 
 
-@back.route('/back/piginfo/insert_stationinfo/', methods=['POST'])
+@back.route('/back/piginfo/stationinfo/', methods=['POST'])
 @admin_login_req
-def insert_stationinfo():
+def stationinfo():
     '''
     以模板的形式渲染页面
     '''
     request_data = request.json
-    param_checker = insert_stationinfo_action(request_data)
+    param_checker = stationinfo_action(request_data)
     if not param_checker['type']: return json.jsonify({'success': False, 'err_msg': param_checker['err_msg']})
 
-    new_station_info = StationInfo(dict(
+    station_info_record = StationInfo(dict(
         stationid=request_data.get('stationid'),
         status=request_data.get('status'),
-        changetime=request_data.get('changetime'),
+        changetime=get_now_timestamp(),
         errorcode=request_data.get('errorcode'),
     ))
 
     try:
         # 插入传入的数据和数据模型不一致的时候，或者由于其他原因插入失败的时候，或报异常
-        new_station_info.add_one()
+        # StationInfo.check_stationid(request_data.get('stationid'))
+        station_info_record.exist_update_or_add(
+            stationid=request_data.get('stationid'),
+            status=request_data.get('status'),
+            changetime=get_now_timestamp(),
+            errorcode=request_data.get('errorcode'),
+        )
 
         @asyncFunc
         def notification():
@@ -47,8 +53,9 @@ def insert_stationinfo():
                 request_data.get('errorcode')) != station_errorcode_on_normal_code:
                 mail_message = '测定站出现<b><font color=red>故障</font></b><br>' \
                                ' 测定站id：<font color=red>' + request_data.get('stationid') + '</font><br>' \
-                                                                                           '错误码：<font color=red>' + request_data.get('errorcode') + '</font><br>' \
-                                                                                                                                                    '<b>请尽快检查并排除故障</b>'
+                                                                                           '错误码：<font color=red>' + request_data.get(
+                    'errorcode') + '</font><br>' \
+                                   '<b>请尽快检查并排除故障</b>'
                 send_mail_async(
                     '测定站运行故障',
                     mail_message,
@@ -66,8 +73,9 @@ def insert_stationinfo():
             if request_data.get('status') == 'off':
                 mail_message = '测定站<b><font color=red>停机</font></b><br>' \
                                '测定站id：<font color=red>' + request_data.get('stationid') + '</font><br>' \
-                                                                                          '错误码：<font color=red>' + request_data.get('errorcode') + '</font><br>' \
-                                                                                                                                                   '<b>请尽快检查并排除故障</b>'
+                                                                                          '错误码：<font color=red>' + request_data.get(
+                    'errorcode') + '</font><br>' \
+                                   '<b>请尽快检查并排除故障</b>'
                 send_mail_async(
                     '测定站已停机',
                     mail_message,

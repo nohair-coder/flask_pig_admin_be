@@ -10,7 +10,7 @@ class NotificationRecord(db.Model):
     '''
     __tablename__ = 'notification_record'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(100), )  # 100 位字符串
     message = db.Column(db.String(255))  # 255 位字符串
     created_time = db.Column(db.Integer)  # 10 位数字

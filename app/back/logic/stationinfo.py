@@ -3,7 +3,7 @@ from app.common.util.input_checker import param_err, check_exist, check_len, che
     check_number_str_len, check_in
 
 
-def insert_stationinfo_action(params):
+def stationinfo_action(params):
     '''
     插入测定站信息
     :param params: 请求的 json 参数
