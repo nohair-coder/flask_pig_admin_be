@@ -2,8 +2,8 @@
 
 ### `POST` /admin/contact/add/
 __params__
-- `email` `string` 邮箱
-- `comment` `string` 备注
+- `email` `string(100)` 邮箱
+- `comment` `string(250)` 备注
 
 __return__
 
