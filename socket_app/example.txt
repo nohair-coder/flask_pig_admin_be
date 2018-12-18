@@ -1,0 +1,52 @@
+# # coding: utf8
+# '本地端，连接 C 端'
+
+from socket import *
+from threading import Thread
+import functools
+import json
+
+host = 'localhost'
+port = 10000
+BUFSIZE = 4096
+
+
+def asyncFunc(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        thr = Thread(target=f, args=args, kwargs=kwargs)
+        thr.start()
+
+    return wrapper
+
+
+# 创建socket
+client_socket = socket(AF_INET, SOCK_STREAM)
+
+# 连接服务器
+serAddr = (host, port)
+client_socket.connect(serAddr)
+
+
+@asyncFunc
+def send_message(msg):
+    try:
+        client_socket.send(msg.encode('utf8'))
+    except Exception as e:
+        client_socket.close()
+
+
+while True:
+    try:
+        raw_receive = client_socket.recv(BUFSIZE)
+        if len(raw_receive) > 0:
+            recv = json.loads(raw_receive, encoding='utf8')
+            print('--------')
+            print(recv)
+            print('--------')
+            send_message(json.dumps({
+                'success': True
+            }))
+    except Exception as e:
+        client_socket.close()
+        break
