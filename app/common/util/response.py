@@ -11,7 +11,7 @@ def success_response(data=None):
     return jsonify({
         'success': True,
         'data': data
-    }) if data else jsonify({
+    }) if data != None else jsonify({
         'success': True,
     })
 
