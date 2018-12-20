@@ -2,12 +2,14 @@
 # '本地端，连接 C 端'
 
 from socket import *
+import json
+import time
 from util import asyncFunc, write_piginfo, write_stationinfo
 
-import json
-
-socket_host = 'localhost'
-socket_port = 10000
+#socket_host = 'localhost'
+socket_host = '192.168.1.100'
+#socket_port = 10000
+socket_port = 6666
 BUFSIZE = 4096
 
 
@@ -18,6 +20,18 @@ client_socket = socket(AF_INET, SOCK_STREAM)
 serAddr = (socket_host, socket_port)
 client_socket.connect(serAddr)
 
+# 超时时间60秒，在处于监听状态下，超时之后，会报错，被捕捉，关闭连接
+client_socket.settimeout(3)
+
+
+def close_and_reconnect():
+    '''
+    连接失败之后，关闭连接，再重新连接
+    :return:
+    '''
+    client_socket.close()
+    print('<<<---   reconnect   --->>>')
+    # client_socket.connect(serAddr)
 
 @asyncFunc
 def send_message(msg):
@@ -26,7 +40,7 @@ def send_message(msg):
     except Exception as e:
         print('<<<----- send_message error  ----->>>')
         print(e)
-        client_socket.close()
+        close_and_reconnect()
 
 
 while True:
@@ -56,5 +70,5 @@ while True:
     except Exception as e:
         print('<<<-----  err  ------>>>')
         print(e)
-        client_socket.close()
+        close_and_reconnect()
         break

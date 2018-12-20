@@ -14,4 +14,7 @@ error_code = {
     '1000_4001': '1000_4001: 通知邮箱添加失败',
     # `app/admin/controller/dashboard`
     '1000_5001': '1000_5001: 获取测定站信息失败',
+    # `app/admin/controller/piginfo`
+    '1000_6001': '1000_6001: 获取种猪信息失败',
+
 }

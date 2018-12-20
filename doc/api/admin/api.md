@@ -2,8 +2,8 @@
 
 ### `POST` /admin/contact/add/
 __params__
-- `email` `string(100)` 邮箱
-- `comment` `string(250)` 备注
+- `email` `string(100)` `required` 邮箱
+- `comment` `string(250)` `required` 备注
 
 __return__
 
@@ -30,6 +30,38 @@ ret = {
             id, // 记录 id  1
             stationid, // 测定站id "qwertyuiopas"
             status, // 状态 "on" "off"
+        }, // ...
+    ],
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+### `POST` /admin/piginfo/
+__params__
+- `type` `string` `required` all、station、one
+- `from_id` `number` 查询起始的id
+- `earid` `string` 种猪的耳标号 type == one 时
+- `stationid` `string` 测定站id type == station
+- `fromTime` `number` 起始时间 10 位数字时间戳
+- `endTime` `number` 起始时间 10 位数字时间戳
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    data: [
+        {
+            bodyheight: 60,
+            bodylong: 150,
+            bodytemperature: 375,
+            bodywidth: 45,
+            earid: "1234567890",
+            foodintake: 72,
+            id: 341,
+            stationid: "5",
+            stationtime: 1545224700,
+            systime: 1545229649,
+            weight: 50
         }, // ...
     ],
     err_msg: string, // 操作失败的时候，返回的错误信息

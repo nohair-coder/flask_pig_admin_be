@@ -2,6 +2,7 @@
 '种猪信息表'
 
 from app import db
+from sqlalchemy import desc, and_
 
 
 class PigInfo(db.Model):
@@ -41,6 +42,45 @@ class PigInfo(db.Model):
         '''
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def get_all(from_id, from_time, end_time):
+        '''
+        获取列表中的所有的种猪信息
+        :param from_time:
+        :param end_time:
+        :return:
+        '''
+        return PigInfo\
+            .query\
+            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+            .order_by(desc(PigInfo.systime), desc(PigInfo.id))\
+            .limit(200)
+
+    @staticmethod
+    def get_one(earid, from_id, from_time, end_time):
+        '''
+        获取某头种猪的历史信息
+        :return:
+        '''
+        return PigInfo\
+            .query\
+            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.earid.__eq__(earid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+            .order_by(desc(PigInfo.systime))\
+            .limit(200)
+
+    @staticmethod
+    def get_station(stationid, from_id, from_time, end_time):
+        '''
+        获取某个测定站的种猪信息
+        :param offset:
+        :return:
+        '''
+        return PigInfo\
+            .query\
+            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.stationid.__eq__(stationid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+            .order_by(desc(PigInfo.systime))\
+            .limit(200)
 
     def __repr__(self):
         return '<PigInfo %r>' % self.earid
