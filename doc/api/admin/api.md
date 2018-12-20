@@ -39,7 +39,7 @@ ret = {
 ### `POST` /admin/piginfo/
 __params__
 - `type` `string` `required` all、station、one
-- `from_id` `number` 查询起始的id
+- `fromId` `number` 查询起始的id
 - `earid` `string` 种猪的耳标号 type == one 时
 - `stationid` `string` 测定站id type == station
 - `fromTime` `number` 起始时间 10 位数字时间戳

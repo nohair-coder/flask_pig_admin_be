@@ -15,11 +15,11 @@ def stationinfo():
         for r in res:
             ret.append(
                 {
-                    'id': r.id,
-                    'stationid': r.stationid,
-                    'status': r.status,
-                    'changetime': r.changetime,
-                    'errorcode': r.errorcode,
+                    'id': r.id, # 记录的 id
+                    'stationid': r.stationid.lstrip('0'), # 测定站 id
+                    'status': r.status, # 测定站状态
+                    'changetime': r.changetime, # 测定站状态修改时间
+                    'errorcode': r.errorcode, # 错误码
                 }
             )
     except Exception as e:
