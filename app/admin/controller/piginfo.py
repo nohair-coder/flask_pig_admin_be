@@ -24,9 +24,10 @@ def station_piginfo():
     res=None
     ret = []
     try:
-        from_time = request_data.get('fromTime', 0)  # 直接接收10位的数字时间戳
+        from_time = request_data.get('fromTime')  # 直接接收10位的数字时间戳
+        from_time = 0 if not from_time else from_time
         end_time = request_data.get('endTime', get_now_timestamp())  # 直接接收10位的数字时间戳
-
+        end_time = 0 if not end_time else end_time
         if type == 'station':
             # 'station'
             stationid = request_data.get('stationid', None)
