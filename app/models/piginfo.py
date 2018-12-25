@@ -2,6 +2,7 @@
 '种猪信息表'
 
 from app import db
+from app.config import length_per_page
 from sqlalchemy import desc, and_
 
 
@@ -51,11 +52,19 @@ class PigInfo(db.Model):
         :param end_time:
         :return:
         '''
-        return PigInfo\
-            .query\
-            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
-            .order_by(desc(PigInfo.systime), desc(PigInfo.id))\
-            .limit(200)
+        if from_id != None:
+            return PigInfo\
+                .query\
+                .filter(and_(PigInfo.id.__lt__(from_id), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+                .order_by(desc(PigInfo.systime), desc(PigInfo.id))\
+                .limit(length_per_page + 1)
+        else:
+            return PigInfo \
+                .query \
+                .filter(and_(PigInfo.systime.__ge__(from_time),
+                             PigInfo.systime.__le__(end_time))) \
+                .order_by(desc(PigInfo.systime), desc(PigInfo.id)) \
+                .limit(length_per_page + 1)
 
     @staticmethod
     def get_one(earid, from_id, from_time, end_time):
@@ -63,11 +72,19 @@ class PigInfo(db.Model):
         获取某头种猪的历史信息
         :return:
         '''
-        return PigInfo\
-            .query\
-            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.earid.__eq__(earid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
-            .order_by(desc(PigInfo.systime))\
-            .limit(200)
+        if from_id != None:
+            return PigInfo\
+                .query\
+                .filter(and_(PigInfo.id.__lt__(from_id), PigInfo.earid.__eq__(earid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+                .order_by(desc(PigInfo.systime))\
+                .limit(length_per_page + 1)
+        else:
+            return PigInfo \
+                .query \
+                .filter(and_(PigInfo.earid.__eq__(earid), PigInfo.systime.__ge__(from_time),
+                             PigInfo.systime.__le__(end_time))) \
+                .order_by(desc(PigInfo.systime)) \
+                .limit(length_per_page + 1)
 
     @staticmethod
     def get_station(stationid, from_id, from_time, end_time):
@@ -76,11 +93,20 @@ class PigInfo(db.Model):
         :param offset:
         :return:
         '''
-        return PigInfo\
-            .query\
-            .filter(and_(PigInfo.id.__gt__(from_id), PigInfo.stationid.__eq__(stationid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
-            .order_by(desc(PigInfo.systime))\
-            .limit(200)
+        if from_id != None:
+            return PigInfo\
+                .query\
+                .filter(and_(PigInfo.id.__lt__(from_id), PigInfo.stationid.__eq__(stationid), PigInfo.systime.__ge__(from_time), PigInfo.systime.__le__(end_time)))\
+                .order_by(desc(PigInfo.systime))\
+                .limit(length_per_page + 1)
+        else:
+            return PigInfo \
+                .query \
+                .filter(
+                and_(PigInfo.stationid.__eq__(stationid), PigInfo.systime.__ge__(from_time),
+                     PigInfo.systime.__le__(end_time))) \
+                .order_by(desc(PigInfo.systime)) \
+                .limit(length_per_page + 1)
 
     def __repr__(self):
         return '<PigInfo %r>' % self.earid

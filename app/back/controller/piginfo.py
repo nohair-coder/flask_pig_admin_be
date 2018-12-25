@@ -22,8 +22,8 @@ def insert_piginfo():
     if not param_checker['type']: return json.jsonify({'success': False, 'err_msg': param_checker['err_msg']})
 
     new_pig_info = PigInfo(dict(
-        earid=request_data.get('earid'),
-        stationid=request_data.get('stationid'),
+        earid=request_data.get('earid').zfill(12),
+        stationid=request_data.get('stationid').zfill(12),
         foodintake=request_data.get('foodintake'),
         weight=request_data.get('weight'),
         bodylong=request_data.get('bodylong'),

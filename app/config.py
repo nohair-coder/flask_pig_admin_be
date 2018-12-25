@@ -12,3 +12,6 @@ mail_config = dict(
     mail_pass='vsjqxqduqbppdafb',
     sender_name='种猪信息测定管理系统'
 )
+
+# 分页加载时，每次加载的条目数
+length_per_page = 50

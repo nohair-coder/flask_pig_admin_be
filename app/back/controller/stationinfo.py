@@ -25,7 +25,7 @@ def stationinfo():
     if not param_checker['type']: return json.jsonify({'success': False, 'err_msg': param_checker['err_msg']})
 
     station_info_record = StationInfo(dict(
-        stationid=request_data.get('stationid'),
+        stationid=request_data.get('stationid').zfill(12),
         status=request_data.get('status'),
         changetime=get_now_timestamp(),
         errorcode=request_data.get('errorcode'),
@@ -35,7 +35,7 @@ def stationinfo():
         # 插入传入的数据和数据模型不一致的时候，或者由于其他原因插入失败的时候，或报异常
         # StationInfo.check_stationid(request_data.get('stationid'))
         station_info_record.exist_update_or_add(
-            stationid=request_data.get('stationid'),
+            stationid=request_data.get('stationid').zfill(12),
             status=request_data.get('status'),
             changetime=get_now_timestamp(),
             errorcode=request_data.get('errorcode'),

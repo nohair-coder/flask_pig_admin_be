@@ -14,7 +14,7 @@ def stationinfo_action(params):
     changetime = params.get('changetime')
     errorcode = params.get('errorcode')
 
-    if not check_exist(stationid) or not check_len(stationid, 12):
+    if not check_exist(stationid) or not check_len(stationid, 12, 'le'):
         return param_err('测定站id')
     if not check_exist(status) or not check_in(status, ('on', 'off')):
         return param_err('机器运行状态')

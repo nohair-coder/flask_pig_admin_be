@@ -38,10 +38,14 @@ def check_len(param, length, type='eq'):
     '''
     if (type == 'eq'):
         return len(str(param)) == length
+    elif (type == 'le'):
+        return len(str(param)) <= length
     elif (type == 'lt'):
         return len(str(param)) < length
     elif (type == 'gt'):
         return len(str(param)) > length
+    elif (type == 'ge'):
+        return len(str(param)) >= length
 
 
 def check_is_timestamp_integer(ts):

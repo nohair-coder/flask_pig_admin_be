@@ -18,9 +18,9 @@ def insert_piginfo_action(params):
     bodytemperature = params.get('bodytemperature')
     stationtime = params.get('stationtime')
 
-    if not check_exist(earid) or not check_len(earid, 12):
+    if not check_exist(earid) or not check_len(earid, 12, 'le'):
         return param_err('耳标号')
-    if not check_exist(stationid) or not check_len(stationid, 12):
+    if not check_exist(stationid) or not check_len(stationid, 12, 'le'):
         return param_err('测定站id')
     if not check_exist(foodintake):
         return param_err('进食量')
