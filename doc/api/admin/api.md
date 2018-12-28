@@ -67,3 +67,24 @@ ret = {
     err_msg: string, // 操作失败的时候，返回的错误信息
 }
 ```
+
+### `POST` /admin/piginfo/export
+__params__
+- `type` `string` all、station、one
+- `earid` `string` 种猪的耳标号 type == one 时
+- `stationid` `string` 测定站id type == station
+- `fromTime` `number` 起始时间 10 位数字时间戳
+- `endTime` `number` 起始时间 10 位数字时间戳
+
+- `path` `string` 保存的路径，默认为 `~`
+- `filename` `string` 保存时的文件名，默认为 `YYYYMMDD-pig.csv`
+- `timeasc` `boolean` 按照时间顺序离现在远的时间排在前面，默认为 `false` 倒序
+- `keys` `array` 选中的字段名，不能为空数组
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```

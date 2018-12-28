@@ -1,8 +1,16 @@
 # coding: utf8
 'configs all here'
 
+mysql_config = dict(
+    username='root',
+    password='root',
+    host='127.0.0.1',
+    port='8889',
+    database='pig',
+)
+
 # 连接数据库的 url
-database_URI = 'mysql+pymysql://root:root@127.0.0.1:8889/pig'
+database_URI = 'mysql+pymysql://' + mysql_config['username'] + ':' + mysql_config['password'] + '@' + mysql_config['host'] + ':'+ mysql_config['port'] +'/'+ mysql_config['database']
 # 测定站完全正常状态的状态码
 station_errorcode_on_normal_code = '00000'
 # 发送邮件的配置
