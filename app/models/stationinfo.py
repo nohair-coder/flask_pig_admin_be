@@ -52,10 +52,10 @@ class StationInfo(db.Model):
         '''
         res = StationInfo.query.filter_by(stationid=stationid).first()
         if res == None:
-            # updates
+            # add
             self.add_one()
         else:
-            # add
+            # update
             res.status=status
             res.errorcode=errorcode
             res.changetime=changetime

@@ -14,7 +14,7 @@ ret = {
 }
 ```
 
-### `GET` /admin/dashboard/stationinfo/
+### `GET` /admin/dashboard/stationinfo/  获取测定站信息
 __params__
 None
 
@@ -36,7 +36,7 @@ ret = {
 }
 ```
 
-### `POST` /admin/piginfo/
+### `POST` /admin/piginfo/  获取种猪信息
 __params__
 - `type` `string` `required` all、station、one
 - `fromId` `number` 查询起始的id
@@ -68,7 +68,7 @@ ret = {
 }
 ```
 
-### `POST` /admin/piginfo/export
+### `POST` /admin/piginfo/export 导出种猪信息
 __params__
 - `type` `string` all、station、one
 - `earid` `string` 种猪的耳标号 type == one 时
@@ -80,6 +80,64 @@ __params__
 - `filename` `string` 保存时的文件名，默认为 `YYYYMMDD-pig.csv`
 - `timeasc` `boolean` 按照时间顺序离现在远的时间排在前面，默认为 `false` 倒序
 - `keys` `array` 选中的字段名，不能为空数组
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+### `GET` /admin/errorcode/ 获取故障码列表
+__params__
+None
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    data: [
+        {
+            id: number, // 记录的id
+            errorcode: string, // 故障码
+            comment: string, // 故障码的解释
+        }, // ...
+    ],
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+### `DELETE` /admin/errorcode/ 删除故障码
+__params__
+- `id` `number` 记录的id 
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+### `POST` /admin/errorcode/ 新增故障码
+__params__
+- `errorcode` `string` 故障码 
+- `comment` `string` 注释 
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+
+### `PUT` /admin/errorcode/ 更新故障码
+__params__
+- `errorcode` `string` 故障码 
+- `comment` `string` 注释
 __return__
 
 ```js
