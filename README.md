@@ -15,3 +15,9 @@
 
 ```
 
+
+## 导出依赖
+```bash
+pip freeze > requirements.txt
+```
+
