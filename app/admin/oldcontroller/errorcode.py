@@ -75,7 +75,7 @@ def add_errorcode():
     return success_response()
 
 
-@admin.route('/admin/errorcode/', methods=['put'])
+@admin.route('/admin/errorcode/', methods=['PUT'])
 def update_errorcode():
     '''
     更改已有的故障码

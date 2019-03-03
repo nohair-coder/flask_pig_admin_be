@@ -91,6 +91,16 @@ def check_in(param, tu):
     '''
     return param in tu
 
+def check_arr_all_in(arr, tu):
+    '''
+    检测第一个参数数组中的每个值是否在第二个数组中
+    :param arr:
+    :param tu:
+    :return:
+    '''
+    for v in arr:
+        if v not in tu: return False
+    return True
 
 def check_is_email(email):
     '''

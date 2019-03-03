@@ -4,7 +4,7 @@
 from flask import request, json
 from app.admin import admin
 from app.common.auth import admin_login_req
-from app.admin.logic.notificationcontact import add_contact_action
+from app.admin.oldlogic.notificationcontact import add_contact_action
 from app.models import NotificationContact
 from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
