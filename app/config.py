@@ -17,8 +17,8 @@ station_errorcode_on_normal_code = '00000'
 mail_config = dict(
     mail_host='smtp.qq.com',
     mail_user='3248184446@qq.com',
-    mail_pass='vsjqxqduqbppdafb',
-    sender_name='种猪信息测定管理系统'
+    mail_pass='zdwzcwtgkhdfdbdh',
+    sender_name='种猪测定信息管理系统'
 )
 
 # 分页加载时，每次加载的条目数

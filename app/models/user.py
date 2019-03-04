@@ -37,6 +37,7 @@ class User(db.Model):
         新增一个用户
         :return:
         '''
+        db.session.add(self)
         db.session.commit()
 
     def signin(self, *, token, last_login_time):
@@ -46,6 +47,13 @@ class User(db.Model):
         '''
         self.token=token
         self.last_login_time=last_login_time
+        db.session.commit()
+
+    def update(self):
+        '''
+        更新
+        :return:
+        '''
         db.session.commit()
 
 
@@ -69,17 +77,6 @@ class User(db.Model):
         :return:
         '''
         return User.query.filter_by(email=self.email).first()
-
-
-
-
-    @staticmethod
-    def get_all_kvs():
-        '''
-        获取所有的键
-        :return:
-        '''
-        return SysCfg.query.all()
 
     def __repr__(self):
         return '<User %r>' % self.username
