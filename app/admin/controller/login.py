@@ -241,4 +241,4 @@ def forget_pass_confirm():
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1000_9004'])
-        return error_response(error_code['1000_9004'])
+        return temp('激活<font color=red>失败</font>', error_code['1000_9004'])
