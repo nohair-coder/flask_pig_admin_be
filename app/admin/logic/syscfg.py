@@ -1,5 +1,5 @@
 # coding: utf8
-from app.common.util.input_checker import param_err, check_exist, check_len, check_in, check_arr_all_in
+from app.common.util.input_checker import param_err, check_len, check_in, check_arr_all_in
 from app.models.syscfg import cfg_allowed_values, cfg_keys
 
 def update_kv_action(params):

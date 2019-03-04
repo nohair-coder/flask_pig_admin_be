@@ -36,16 +36,17 @@ def check_len(param, length, type='eq'):
     :param type: eq 字段长度等于，lt 字段长度小于，gt 大于
     :return:
     '''
+
     if (type == 'eq'):
-        return len(str(param)) == length
+        return len(param) == length
     elif (type == 'le'):
-        return len(str(param)) <= length
+        return len(param) <= length
     elif (type == 'lt'):
-        return len(str(param)) < length
+        return len(param) < length
     elif (type == 'gt'):
-        return len(str(param)) > length
+        return len(param) > length
     elif (type == 'ge'):
-        return len(str(param)) >= length
+        return len(param) >= length
 
 
 def check_is_timestamp_integer(ts):
@@ -63,7 +64,8 @@ def check_is_phone(phone):
     :param phone: 手机号码
     :return:
     '''
-    return len(str(phone)) == 11
+
+    return re.match('^1[0-9]{10}$', str(phone)) != None
 
 
 def check_number_str_len(number_str='', len=0):
@@ -107,8 +109,8 @@ def check_is_email(email):
     检查是否是邮箱
     :return:
     '''
-    ret = re.match('[a-zA-Z0-9][\w\.-]+@(?:[A-Za-z0-9]+\.)+[A-Za-z]+$', str(email))
-    return ret != None
+    # http://emailregex.com/
+    return re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", str(email)) != None
 
 
 def check_is_str(param):
@@ -128,3 +130,11 @@ def check_str_len(param='', min=0, max=0):
     :return:
     '''
     return len(str(param)) >= min and len(str(param)) <= max
+
+def is_none(param):
+    '''
+    参数不是 None
+    :param param:
+    :return:
+    '''
+    return param == None

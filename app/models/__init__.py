@@ -9,4 +9,5 @@ from .stationerrorcodereference import StationErrorcodeReference
 
 # latest
 from .syscfg import SysCfg
+from .user import User
 
