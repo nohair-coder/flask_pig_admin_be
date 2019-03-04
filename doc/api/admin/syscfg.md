@@ -34,6 +34,7 @@ ret = {
     err_msg: string, // 操作失败的时候，返回的错误信息
 }
 ```
+
 ### `PUT` /admin/syscfg/update_kv
 __params__
 - `name` `string` `required`
