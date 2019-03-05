@@ -11,6 +11,10 @@ from app.common.errorcode import error_code
 
 @admin.route('/admin/stationinfo/', methods=['GET'])
 def get_all_station():
+    '''
+    获取所有测定站信息
+    :return:
+    '''
     try:
         res = StationInfo().get_all_station()
         station_off = [] # off 状态的排在前面
