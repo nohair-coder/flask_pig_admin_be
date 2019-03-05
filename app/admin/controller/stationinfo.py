@@ -6,6 +6,7 @@ from app.admin import admin
 from app.admin.logic.stationinfo import add_station_action, delete_station_action, update_station_action
 from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
+from app.common.memory.stationlist import stationid_exist, initialize_station_list
 from app.common.errorcode import error_code
 
 
@@ -83,6 +84,9 @@ def add_station():
             'changetime': get_now_timestamp(),
         }).add_one()
 
+        # 重新获取新的测定站号列表数据
+        initialize_station_list()
+
         return success_response(ret)
 
     except Exception as e:
@@ -108,6 +112,9 @@ def delete_station():
         ret = StationInfo({
             'stationid': stationid,
         }).delete_one()
+
+        # 重新获取新的测定站号列表数据
+        initialize_station_list()
 
         return success_response(ret)
 
@@ -135,7 +142,7 @@ def update_station():
         changetime = get_now_timestamp()
 
         # 将记录修改
-        ret = StationInfo({
+        StationInfo({
             'stationid': stationid,
             'comment': comment,
             'status': status,
@@ -143,7 +150,7 @@ def update_station():
             'changetime': changetime,
         }).update_one()
 
-        return success_response(ret)
+        return success_response()
 
     except Exception as e:
         error_logger(e)
