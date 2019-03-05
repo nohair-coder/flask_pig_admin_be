@@ -44,7 +44,8 @@ class StationInfo(db.Model):
         删除一个测定站记录
         :return:
         '''
-        db.session.delete(self)
+        res = StationInfo.query.filter_by(stationid=self.stationid).first()
+        db.session.delete(res)
         db.session.commit()
 
     def exist_update_or_add(self, stationid, status, errorcode, changetime):

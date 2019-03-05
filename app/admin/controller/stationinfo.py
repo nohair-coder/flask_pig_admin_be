@@ -3,7 +3,7 @@
 
 from flask import request
 from app.admin import admin
-from app.admin.logic.stationinfo import add_station_action
+from app.admin.logic.stationinfo import add_station_action, delete_station_action
 from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
 from app.common.errorcode import error_code
@@ -85,3 +85,29 @@ def add_station():
         error_logger(e)
         error_logger(error_code['1000_5002'])
         return error_response(error_code['1000_5002'])
+
+@admin.route('/admin/stationinfo/delete_station/', methods=['POST'])
+def delete_station():
+    '''
+    删除一个测定站记录
+    :return:
+    '''
+    try:
+        # 参数校验
+        request_data = request.json
+        param_checker = delete_station_action(request_data)
+        if not param_checker['type']: return error_response(param_checker['err_msg'])
+
+        stationid = request_data.get('stationid')
+
+        # 将记录删除
+        ret = StationInfo({
+            'stationid': stationid,
+        }).delete_one()
+
+        return success_response(ret)
+
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1000_5003'])
+        return error_response(error_code['1000_5003'])
