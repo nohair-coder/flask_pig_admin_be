@@ -7,6 +7,7 @@ from app.admin.logic.syscfg import update_kv_action
 from app.models.syscfg import SysCfg, cfg_keys
 from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
+from app.common.memory.facnum import initialize_facnum
 
 
 @admin.route('/admin/syscfg/get_all_kvs/', methods=['GET'])
@@ -56,8 +57,12 @@ def update_kv():
             'value': value,
         }).update_kv()
 
+        # 如果更改了猪场代码，则重新将猪场代码载入内存
+        if name == cfg_keys.get('FAC_NUM'):
+            initialize_facnum()
+
+        return success_response()
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1000_8002'])
         return error_response(error_code['1000_8002'])
-    return success_response()

@@ -8,6 +8,7 @@ from app.common.util import asyncFunc
 
 station_list = []
 
+
 @asyncFunc
 def initialize_station_list(slist=station_list):
     '''
@@ -26,10 +27,10 @@ def initialize_station_list(slist=station_list):
         error_logger(e)
         error_logger(error_code['1100_0001'])
 
+
 def stationid_exist(stationid):
     '''
     检查测定站号是否在内存中的测定站列表中
     :return:
     '''
     return stationid in station_list
-

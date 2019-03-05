@@ -71,5 +71,12 @@ class SysCfg(db.Model):
         '''
         return SysCfg.query.all()
 
+    def get_one(self):
+        '''
+        获取一个键值
+        :return:
+        '''
+        return SysCfg.query.filter_by(name=self.name).first()
+
     def __repr__(self):
         return '<SysCfg %r>' % self.name

@@ -11,4 +11,5 @@ from .stationerrorcodereference import StationErrorcodeReference
 from .syscfg import SysCfg
 from .user import User
 from .userfindpass import UserFindPass
+from .piglist import PigList
 
