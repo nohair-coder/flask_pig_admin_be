@@ -48,6 +48,22 @@ class StationInfo(db.Model):
         db.session.delete(res)
         db.session.commit()
 
+    def update_one(self):
+        '''
+        更改测定站信息
+        :return:
+        '''
+        res = StationInfo.query.filter_by(stationid=self.stationid).first()
+        if self.comment != None:
+            res.comment = self.comment
+        if self.status != None:
+            res.status = self.status
+        if self.changetime != None:
+            res.changetime = self.changetime
+        if self.errorcode != None:
+            res.errorcode = self.errorcode
+        db.session.commit()
+
     def exist_update_or_add(self, stationid, status, errorcode, changetime):
         '''
         当stationid存在的时候，则将状态更改到数据库中，否则如果不存在该stationid，即添加到数据库中
@@ -66,11 +82,3 @@ class StationInfo(db.Model):
 
     def __repr__(self):
         return '<StationInfo %r>' % self.stationid
-
-    # def check_stationid_exist(self, id):
-    #     '''
-    #     检查测定站id是否在数据库中有记录了
-    #     :return:
-    #     '''
-    #     ret = StationInfo.query.filter_by(stationid=id).first()
-    #     return ret != None

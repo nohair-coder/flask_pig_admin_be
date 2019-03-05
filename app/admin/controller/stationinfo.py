@@ -3,13 +3,13 @@
 
 from flask import request
 from app.admin import admin
-from app.admin.logic.stationinfo import add_station_action, delete_station_action
+from app.admin.logic.stationinfo import add_station_action, delete_station_action, update_station_action
 from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
 from app.common.errorcode import error_code
 
 
-@admin.route('/admin/stationinfo/get_all_station/', methods=['GET'])
+@admin.route('/admin/stationinfo/', methods=['GET'])
 def get_all_station():
     try:
         res = StationInfo().get_all_station()
@@ -53,7 +53,7 @@ def get_all_station():
         error_logger(error_code['1000_5001'])
         return error_response(error_code['1000_5001'])
 
-@admin.route('/admin/stationinfo/add_station/', methods=['POST'])
+@admin.route('/admin/stationinfo/', methods=['POST'])
 def add_station():
     '''
     添加一条测定站记录
@@ -86,7 +86,7 @@ def add_station():
         error_logger(error_code['1000_5002'])
         return error_response(error_code['1000_5002'])
 
-@admin.route('/admin/stationinfo/delete_station/', methods=['POST'])
+@admin.route('/admin/stationinfo/delete_station/', methods=['DELETE'])
 def delete_station():
     '''
     删除一个测定站记录
@@ -111,3 +111,38 @@ def delete_station():
         error_logger(e)
         error_logger(error_code['1000_5003'])
         return error_response(error_code['1000_5003'])
+
+@admin.route('/admin/stationinfo/', methods=['PUT'])
+def update_station():
+    '''
+    更改一个测定站的记录信息
+    :return:
+    '''
+    try:
+        # 参数校验
+        request_data = request.json
+        param_checker = update_station_action(request_data)
+        if not param_checker['type']: return error_response(param_checker['err_msg'])
+
+        stationid = request_data.get('stationid')
+        comment = request_data.get('comment')
+        status = request_data.get('status')
+        errorcode = request_data.get('errorcode')
+        changetime = get_now_timestamp()
+
+        # 将记录修改
+        ret = StationInfo({
+            'stationid': stationid,
+            'comment': comment,
+            'status': status,
+            'errorcode': errorcode,
+            'changetime': changetime,
+        }).update_one()
+
+        return success_response(ret)
+
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1000_5003'])
+        return error_response(error_code['1000_5003'])
+

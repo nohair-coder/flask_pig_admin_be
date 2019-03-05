@@ -138,3 +138,11 @@ def is_none(param):
     :return:
     '''
     return param == None
+
+def check_is_errorcode(errorcode):
+    '''
+    检查是否是 errorcode
+    :param errorcode:
+    :return:
+    '''
+    return type(errorcode) == str and re.match('^[0-9]{5}$', errorcode) != None
