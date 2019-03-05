@@ -143,6 +143,6 @@ def update_station():
 
     except Exception as e:
         error_logger(e)
-        error_logger(error_code['1000_5003'])
-        return error_response(error_code['1000_5003'])
+        error_logger(error_code['1000_5004'])
+        return error_response(error_code['1000_5004'])
 
