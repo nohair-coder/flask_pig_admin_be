@@ -9,7 +9,7 @@ from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
 
 
-@admin.route('/admin/syscfg/get_all_kvs', methods=['GET'])
+@admin.route('/admin/syscfg/get_all_kvs/', methods=['GET'])
 def get_all_kvs():
     '''
     获取数据库中的所有 kv 对
@@ -30,7 +30,7 @@ def get_all_kvs():
         return error_response(error_code['1000_8001'])
     return success_response(ret)
 
-@admin.route('/admin/syscfg/update_kv', methods=['PUT'])
+@admin.route('/admin/syscfg/update_kv/', methods=['PUT'])
 def update_kv():
     '''
     更改某个 KV 对的值

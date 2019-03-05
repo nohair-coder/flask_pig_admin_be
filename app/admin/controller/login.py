@@ -1,10 +1,6 @@
 # coding: utf8
 '用户注册、登录、忘记密码'
 
-# - signIn -> 提供用户名，密码
-# - signUp -> 提供用户名，密码，邮箱，手机号
-# - forgetPass -> 邮箱，新密码
-
 from flask import request
 from app.admin import admin
 from app.admin.logic.login import signup_action, signin_action, forget_pass_action, forget_pass_confirm_action
@@ -14,7 +10,7 @@ from app.common.util.send_email import send_mail_async
 from app.common.errorcode import error_code
 from app.config import mail_config
 
-@admin.route('/admin/login/signup', methods=['POST'])
+@admin.route('/admin/login/signup/', methods=['POST'])
 def sigup():
     '''
     用户注册
@@ -74,7 +70,7 @@ def sigup():
         return error_response(error_code['1000_9001'])
 
 
-@admin.route('/admin/login/signin', methods=['POST'])
+@admin.route('/admin/login/signin/', methods=['POST'])
 def signin():
     '''
     用户登录
@@ -119,7 +115,7 @@ def signin():
         return error_response(error_code['1000_9002'])
 
 
-@admin.route('/admin/login/forget_pass', methods=['POST'])
+@admin.route('/admin/login/forget_pass/', methods=['POST'])
 def forget_pass():
     '''
     用户忘记密码
@@ -187,7 +183,7 @@ def forget_pass():
         error_logger(error_code['1000_9003'])
         return error_response(error_code['1000_9003'])
 
-@admin.route('/admin/login/forget_pass_confirm', methods=['GET'])
+@admin.route('/admin/login/forget_pass_confirm/', methods=['GET'])
 def forget_pass_confirm():
     '''
     邮件找回密码，确认的网页

@@ -5,3 +5,4 @@ admin = Blueprint('admin', __name__)
 
 import app.admin.controller.syscfg
 import app.admin.controller.login
+import app.admin.controller.stationinfo

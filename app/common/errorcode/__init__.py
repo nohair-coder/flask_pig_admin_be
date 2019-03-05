@@ -12,8 +12,9 @@ error_code = {
     '1000_3001': '1000_3001: 邮件发送失败',
     # `app/admin/controller/notificationcontact`
     '1000_4001': '1000_4001: 通知邮箱添加失败',
-    # `app/admin/controller/dashboard`
+    # `app/admin/controller/stationinfo`
     '1000_5001': '1000_5001: 获取测定站信息失败',
+    '1000_5002': '1000_5002: 添加测定站失败，请检查测定站是否已经存在',
     # `app/admin/controller/piginfo`
     '1000_6001': '1000_6001: 获取种猪信息失败',
     # `app/admin/controller/piginfo`
