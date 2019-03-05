@@ -4,9 +4,11 @@
 from app.models import StationInfo
 from app.common.util import error_logger
 from app.common.errorcode import error_code
+from app.common.util import asyncFunc
 
 station_list = []
 
+@asyncFunc
 def initialize_station_list(slist=station_list):
     '''
     存数据库中获取数据到内存

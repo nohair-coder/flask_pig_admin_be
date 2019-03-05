@@ -6,7 +6,7 @@ from app.admin import admin
 from app.admin.logic.stationinfo import add_station_action, delete_station_action, update_station_action
 from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
-from app.common.memory.stationlist import stationid_exist, initialize_station_list
+from app.common.memory.stationlist import initialize_station_list, stationid_exist
 from app.common.errorcode import error_code
 
 
@@ -70,8 +70,9 @@ def add_station():
         param_checker = add_station_action(request_data)
         if not param_checker['type']: return error_response(param_checker['err_msg'])
 
-        # 数据写入
         stationid = request_data.get('stationid')
+        if stationid_exist(stationid): return error_response('测定站已存在')
+
         comment = request_data.get('comment')
         status = request_data.get('status')
 
@@ -94,7 +95,7 @@ def add_station():
         error_logger(error_code['1000_5002'])
         return error_response(error_code['1000_5002'])
 
-@admin.route('/admin/stationinfo/delete_station/', methods=['DELETE'])
+@admin.route('/admin/stationinfo/', methods=['DELETE'])
 def delete_station():
     '''
     删除一个测定站记录
@@ -107,6 +108,7 @@ def delete_station():
         if not param_checker['type']: return error_response(param_checker['err_msg'])
 
         stationid = request_data.get('stationid')
+        if not stationid_exist(stationid): return error_response('测定站不存在')
 
         # 将记录删除
         ret = StationInfo({
@@ -136,6 +138,8 @@ def update_station():
         if not param_checker['type']: return error_response(param_checker['err_msg'])
 
         stationid = request_data.get('stationid')
+        if not stationid_exist(stationid): return error_response('测定站不存在')
+
         comment = request_data.get('comment')
         status = request_data.get('status')
         errorcode = request_data.get('errorcode')
@@ -156,4 +160,3 @@ def update_station():
         error_logger(e)
         error_logger(error_code['1000_5004'])
         return error_response(error_code['1000_5004'])
-
