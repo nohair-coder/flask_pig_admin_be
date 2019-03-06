@@ -27,7 +27,6 @@ def initialize_piglist(animalnum_list = pig_animalnum_list, earid_list = pig_ear
         error_logger(e)
         error_logger(error_code['1100_2001'])
 
-
 def animalnum_exist(animalnum):
     '''
     检查 animalnum 是否已经存在

@@ -26,13 +26,13 @@ def initialize_facnum(fac=facnum):
         error_logger(error_code['1100_0002'])
 
 
-def facnum_is_correct(fac):
+def facnum_exist(fac):
     '''
-    检查输入的 facnum 是否符合规范
+    检查输入的 facnum 是否存在
     :return:
     '''
     try:
-        return fac == facnum[0]
+        return fac in facnum
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_0003'])
