@@ -9,29 +9,32 @@ from app.common.util import asyncFunc
 pig_animalnum_list = [] # 种猪种猪号列表，未出栏的
 pig_earid_list = [] # 种猪耳标号列表，未出栏的
 pig_id_list = [] # 种猪id列表，未出栏的
-pig_identity_info_list = [] # [{ pid, animalnum, earid }] 未出栏的
+pig_identity_info_list = [] # [{ pid 种猪id, animalnum 种猪号, earid 耳标号, stationid 种猪所属测定站 }] 未出栏的
 
 @asyncFunc
-def initialize_piglist(animalnum_list = pig_animalnum_list, earid_list = pig_earid_list, id_list = pig_id_list):
+def initialize_piglist():
     '''
     从数据库中获取数据到内存
     :return:
     '''
-    animalnum_list.clear()
-    earid_list.clear()
+    pig_animalnum_list.clear()
+    pig_earid_list.clear()
+    pig_id_list.clear()
+    pig_identity_info_list.clear()
     try:
         res = PigList().get_all()
 
         for r in res:
-            animalnum_list.append(r.animalnum)
-            earid_list.append(r.earid)
-            id_list.append(r.id)
+            pig_animalnum_list.append(r.animalnum)
+            pig_earid_list.append(r.earid)
+            pig_id_list.append(r.id)
             pig_identity_info_list.append({
                 'animalnum': r.animalnum,
                 'earid': r.earid,
                 'pid': r.id,
+                'stationid': r.stationid,
             })
-
+        print(pig_identity_info_list)
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_2001'])
@@ -77,3 +80,4 @@ def get_pig_info(param, type='pid'):
         for r in pig_identity_info_list:
             if r.get('animalnum') == param:
                 return r
+    return None

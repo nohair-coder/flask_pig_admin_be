@@ -22,7 +22,6 @@ def initialize_station_list(slist=station_list):
         res = StationInfo().get_all_station()
         for r in res:
             slist.append(r.stationid)
-
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_0001'])

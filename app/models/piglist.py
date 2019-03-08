@@ -35,7 +35,7 @@ class PigList(db.Model):
         获取到所有种猪的列表
         :return:
         '''
-        return PigList.query.filter(PigList.exit_time.is_(None)).with_entities(PigList.id, PigList.animalnum, PigList.earid).all()
+        return PigList.query.filter(PigList.exit_time.is_(None)).with_entities(PigList.id, PigList.animalnum, PigList.earid, PigList.stationid).all()
 
     def get_from_station(self, noexit):
         '''
@@ -57,6 +57,7 @@ class PigList(db.Model):
         '''
         db.session.add(self)
         db.session.commit()
+        return self
 
     def exit_one(self):
         '''
@@ -92,5 +93,15 @@ class PigList(db.Model):
         })
         db.session.commit()
 
+    def update_stationid(self):
+        '''
+        更新所属测定站
+        :return:
+        '''
+        PigList.query.filter_by(id=self.id).update({
+            'stationid': self.stationid,
+        })
+        db.session.commit()
+
     def __repr__(self):
-        return '<PigList %r>' % self.animalnum
+        return '<PigList %r>' % self.earid

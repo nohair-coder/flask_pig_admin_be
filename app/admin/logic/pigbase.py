@@ -27,13 +27,11 @@ def add_one_record_action(params):
     start_time = params.get('start_time')
     end_time = params.get('end_time')
 
-    print(params)
-
     if is_none(earid) or not check_len(earid, 12, 'eq'):
         return param_err(define_name['earid'])
 
-    if is_none(stationid):
-        return param_err(define_name['station'])
+    if is_none(stationid) or not check_len(stationid, 12, 'le'):
+        return param_err(define_name['stationid'])
 
     if is_none(food_intake):
         return param_err(define_name_pigbase['food_intake'])
