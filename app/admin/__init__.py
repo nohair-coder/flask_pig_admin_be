@@ -7,3 +7,4 @@ import app.admin.controller.syscfg
 import app.admin.controller.login
 import app.admin.controller.stationinfo
 import app.admin.controller.piglist
+import app.admin.controller.pigbase

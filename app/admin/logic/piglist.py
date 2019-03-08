@@ -1,9 +1,9 @@
 # coding: utf8
-from app.common.util.input_checker import param_err, check_len, is_none
 from app.common.config.define_name import define_name
-from app.common.memory.stationlist import stationid_exist
-from app.common.memory.piglist import animalnum_exist, earid_exist
 from app.common.memory.facnum import facnum_exist
+from app.common.memory.piglist import animalnum_exist, earid_exist
+from app.common.memory.stationlist import stationid_exist
+from app.common.util.input_checker import param_err, check_len, is_none
 
 
 def get_piglist_from_station_action(params):
@@ -20,6 +20,7 @@ def get_piglist_from_station_action(params):
         return dict(type=False, err_msg=define_name['stationid'] + '不存在')
 
     return dict(type=True)
+
 
 def entry_one_action(params):
     '''
@@ -41,11 +42,13 @@ def entry_one_action(params):
         return param_err(define_name['station'])
     if not stationid_exist(stationid):
         return dict(type=False, err_msg=define_name['stationid'] + '不存在')
+
     if is_none(animalnum) or not check_len(animalnum, 12, 'eq'):
         return param_err(define_name['animalnum'])
     # 检测种猪号是否已经存在
     if animalnum_exist(animalnum):
         return dict(type=False, err_msg=define_name['animalnum'] + '已经存在')
+
     if is_none(earid) or not check_len(earid, 12, 'eq'):
         return param_err(define_name['earid'])
     # 检测耳标号是否已经存在
@@ -53,6 +56,7 @@ def entry_one_action(params):
         return dict(type=False, err_msg=define_name['earid'] + '已经存在')
 
     return dict(type=True)
+
 
 def exit_one_action(params):
     '''
@@ -66,6 +70,7 @@ def exit_one_action(params):
         return param_err('记录id')
 
     return dict(type=True)
+
 
 def exit_one_station_action(params):
     '''
@@ -81,6 +86,7 @@ def exit_one_station_action(params):
         return dict(type=False, err_msg=define_name['stationid'] + '不存在')
 
     return dict(type=True)
+
 
 def update_piginfo_action(params):
     '''

@@ -182,5 +182,3 @@ def update_piginfo():
         error_logger(e)
         error_logger(error_code['1001_0005'])
         return error_response(error_code['1001_0005'])
-
-# 对内存中的种猪、耳标做处理，出栏的猪就可以当做不存在，从内存数据中删除

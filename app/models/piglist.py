@@ -35,7 +35,7 @@ class PigList(db.Model):
         获取到所有种猪的列表
         :return:
         '''
-        return PigList.query.filter(PigList.exit_time.is_(None)).with_entities(PigList.animalnum, PigList.earid).all()
+        return PigList.query.filter(PigList.exit_time.is_(None)).with_entities(PigList.id, PigList.animalnum, PigList.earid).all()
 
     def get_from_station(self, noexit):
         '''
