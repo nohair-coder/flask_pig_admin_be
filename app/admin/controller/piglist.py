@@ -10,7 +10,7 @@ from app.admin import admin
 from app.admin.logic.piglist import get_piglist_from_station_action, entry_one_action, exit_one_action, exit_one_station_action, update_piginfo_action
 from app.models import PigList
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
-from app.common.memory.piglist import initialize_piglist
+from app.common.memory.piglist import initialize_piglist_async
 from app.common.errorcode import error_code
 
 @admin.route('/admin/piglist/get_piglist_from_station/', methods=['GET'])
@@ -82,7 +82,7 @@ def entry_one():
 
         PigList(pig_data).entry_one()
 
-        initialize_piglist()
+        initialize_piglist_async()
 
         return success_response(pig_data)
 
@@ -111,7 +111,7 @@ def exit_one():
             'exit_time': get_now_timestamp(),
         }).exit_one()
 
-        initialize_piglist()
+        initialize_piglist_async()
 
         return success_response()
 
@@ -139,7 +139,7 @@ def exit_one_station():
             'stationid': stationid,
         }).exit_one_station(get_now_timestamp())
 
-        initialize_piglist()
+        initialize_piglist_async()
 
         return success_response()
 
@@ -174,7 +174,7 @@ def update_piginfo():
             'earid': earid,
         }).update_piginfo()
 
-        initialize_piglist()
+        initialize_piglist_async()
 
         return success_response()
 

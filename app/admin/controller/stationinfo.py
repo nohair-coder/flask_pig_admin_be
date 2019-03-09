@@ -6,7 +6,7 @@ from app.admin import admin
 from app.admin.logic.stationinfo import add_station_action, delete_station_action, update_station_action
 from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
-from app.common.memory.stationlist import initialize_station_list, stationid_exist
+from app.common.memory.stationlist import initialize_station_list_async, stationid_exist
 from app.common.errorcode import error_code
 
 
@@ -86,7 +86,7 @@ def add_station():
         }).add_one()
 
         # 重新获取新的测定站号列表数据
-        initialize_station_list()
+        initialize_station_list_async()
 
         return success_response(ret)
 
@@ -116,7 +116,7 @@ def delete_station():
         }).delete_one()
 
         # 重新获取新的测定站号列表数据
-        initialize_station_list()
+        initialize_station_list_async()
 
         return success_response(ret)
 

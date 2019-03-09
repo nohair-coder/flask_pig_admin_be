@@ -1,17 +1,16 @@
 # coding: utf8
 '内存中存储种猪信息列表'
 
-from app.models import PigList
-from app.common.util import error_logger
 from app.common.errorcode import error_code
 from app.common.util import asyncFunc
+from app.common.util import error_logger
+from app.models import PigList
 
 pig_animalnum_list = [] # 种猪种猪号列表，未出栏的
 pig_earid_list = [] # 种猪耳标号列表，未出栏的
 pig_id_list = [] # 种猪id列表，未出栏的
 pig_identity_info_list = [] # [{ pid 种猪id, animalnum 种猪号, earid 耳标号, stationid 种猪所属测定站 }] 未出栏的
 
-@asyncFunc
 def initialize_piglist():
     '''
     从数据库中获取数据到内存
@@ -34,10 +33,20 @@ def initialize_piglist():
                 'pid': r.id,
                 'stationid': r.stationid,
             })
-        print(pig_identity_info_list)
+
+        print('initialize_piglist 种猪信息列表载入内存成功')
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_2001'])
+
+@asyncFunc
+def initialize_piglist_async():
+    '''
+    分配子线程处理
+    :return:
+    '''
+    initialize_piglist()
+
 
 def animalnum_exist(animalnum):
     '''

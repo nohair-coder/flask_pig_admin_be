@@ -7,7 +7,8 @@ from app.admin.logic.syscfg import update_kv_action
 from app.models.syscfg import SysCfg, cfg_keys
 from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
-from app.common.memory.facnum import initialize_facnum
+from app.common.memory.facnum import initialize_facnum_async
+from app.common.memory.daily_intake_start_time import initialize_intake_start_time_async
 
 
 @admin.route('/admin/syscfg/get_all_kvs/', methods=['GET'])
@@ -59,7 +60,10 @@ def update_kv():
 
         # 如果更改了猪场代码，则重新将猪场代码载入内存
         if name == cfg_keys.get('FAC_NUM'):
-            initialize_facnum()
+            initialize_facnum_async()
+        # 如果日首次采食的开始时间，则重新将猪场代码载入内存
+        if name == cfg_keys.get('PIG_DAILY_INTAKE_START_TIME'):
+            initialize_intake_start_time_async()
 
         return success_response()
     except Exception as e:

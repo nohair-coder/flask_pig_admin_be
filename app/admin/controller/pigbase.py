@@ -10,8 +10,9 @@ from app.admin.logic.piglist import get_piglist_from_station_action
 from app.admin.logic.pigbase import add_one_record_action
 from app.models import PigBase, StationInfo, PigList
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time
-from app.common.memory.piglist import initialize_piglist, get_pig_info
-from app.common.memory.stationlist import stationid_exist, initialize_station_list
+from app.common.memory.piglist import initialize_piglist_async, get_pig_info
+from app.common.memory.stationlist import stationid_exist, initialize_station_list_async
+from app.common.memory.daily_intake_start_time import is_after_intake_start_time
 from app.common.errorcode import error_code
 
 @admin.route('/admin/pigbase/add_one_record', methods=['POST'])
@@ -46,10 +47,9 @@ def add_one_record():
         end_time = request_data.get('end_time')
         sys_time = get_now_timestamp()
 
-        # 依据耳标号查询到种猪的 pid，animanum，earid 信息
+        # 从内存中 依据耳标号查询到种猪的 pid，animanum，earid 信息
         pig_identity_info = get_pig_info(earid, 'earid')
 
-        # @Todo
         if pig_identity_info:
             pid = pig_identity_info.get('pid')
 
@@ -67,31 +67,24 @@ def add_one_record():
                 'end_time': end_time,
                 'sys_time': sys_time,
             }).add_one()
-
             # 检查是否更换了测定站
             if stationid != pig_identity_info.get('stationid'):
-                print('更换了测定站')
                 PigList({
                     'id': pid,
                     'stationid': stationid,
                 }).update_stationid()
-                initialize_piglist()
-                print('种猪所属测定站更改成功')
+                initialize_piglist_async()
         else:
             # 1、新增种猪记录
             # 2、刷新内存数据
             # 3、获取到 pid，将基础数据写入
             new_record = PigList({
-                'facnum': '',
+                'facnum': '', # 系统自动生成的记录，不分配 facnum
                 'stationid': stationid,
-                'animalnum': '',
+                'animalnum': '', # 系统自动生成的记录，不分配种猪号
                 'earid': earid,
                 'entry_time': get_now_timestamp(),
             }).entry_one()
-
-            print('新种猪的信息', new_record)
-            print('新种猪的id', new_record.id)
-
             PigBase({
                 'pid': new_record.id,
                 'food_intake': food_intake,
@@ -106,16 +99,12 @@ def add_one_record():
                 'end_time': end_time,
                 'sys_time': sys_time,
             }).add_one()
-
-            initialize_piglist()
-            print('新猪记录产生成功')
-
+            initialize_piglist_async()
 
         # ------------------- 智能测定站转换 -------------------
         # 如果测定站不存在，说明种猪被投放到了一个新的测定站
         # 需要新创建一个测定站
         if not stationid_exist(stationid):
-            print('add new station')
             # 1、先创建测定站
             StationInfo({
                 'stationid': stationid,
@@ -125,13 +114,7 @@ def add_one_record():
                 'errorcode': '00000',
             }).add_one()
             # 刷新内存中的测定站数据
-            initialize_station_list()
-
-
-        # 现在传送过来的测定站和数据库中种猪所属的测定站不同，则认定为种猪换栏了
-        # 1、需要将种猪在栏中的数据进行更新
-        # 2、同时刷新内存中种猪的数据
-
+            initialize_station_list_async()
 
         return success_response()
 
@@ -179,3 +162,8 @@ def get_baseinfo():
         error_logger(e)
         error_logger(error_code['1001_0001'])
         return error_response(error_code['1001_0001'])
+
+
+# @Todo
+# 1、指定时间之后的第一次数据的采集
+# 2、每天的体重均值，进食次数 => 表的完善
