@@ -51,6 +51,7 @@ class PigBase(db.Model):
         '''
         db.session.add(self)
         db.session.commit()
+        return self
 
     def delete_one(self):
         '''

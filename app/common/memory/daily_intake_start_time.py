@@ -51,6 +51,3 @@ def is_after_intake_start_time(ts):
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_3002'])
-
-# @Todo
-# 时间对比完成，下一步筛选每日首次记录

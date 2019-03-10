@@ -8,12 +8,65 @@ from flask import request
 from app.admin import admin
 from app.admin.logic.piglist import get_piglist_from_station_action
 from app.admin.logic.pigbase import add_one_record_action
-from app.models import PigBase, StationInfo, PigList
-from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time
+from app.models import PigBase, StationInfo, PigList, PigDailyFirstIntake
+from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time, transform_time, asyncFunc
 from app.common.memory.piglist import initialize_piglist_async, get_pig_info
 from app.common.memory.stationlist import stationid_exist, initialize_station_list_async
 from app.common.memory.daily_intake_start_time import is_after_intake_start_time
+from app.common.memory.daily_first_intake_record import has_pig_today_intook, reset_record, is_record_outdated, add_pid
 from app.common.errorcode import error_code
+
+
+@asyncFunc
+def today_first_intook_proc(*, sys_time, pid, pigbase_id):
+    '''
+    判断本次采食是否是当天 intake_start_time 时间之后的首次采食
+    如果是则存入 首次采食数据表，并刷新
+    否则忽略
+    :param sys_time: 10 位的时间戳
+    :param pid: 种猪 id
+    :param pigbase_id: 对应的 pigbase 表的记录 id
+    :return:
+    '''
+    # 1、判断 sys_time 是否在当天的 intake_start_time 之后
+    # 2、判断 今天的 datestring（YYYYmmdd）和内存的 datestring，今天的大于内存的则 reset_record
+    # 3、相等的则再判断 pid 是否已经存在，已经存在则不处理，不存在则添加到数据库，同时更新到内存
+    try:
+
+        transformed_time = transform_time(sys_time, '%Y%m%d')
+
+        if is_after_intake_start_time(sys_time):
+            # 如果内存中的记录已经过期，则 reset_record
+            if is_record_outdated(sys_time):
+                reset_record(sys_time)
+            # 如果该猪当天没有采食
+            if not has_pig_today_intook(pid):
+                PigDailyFirstIntake({
+                    'pid': pid,
+                    'pigbase_id': pigbase_id,
+                    'record_date': transformed_time,
+                }).add_one()
+                # 添加到内存中之后，将 pid 也更新到内存中
+                add_pid(pid)
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1002_0002'])
+
+
+def daily_assess(*, pid, intake, weight, sys_time):
+    '''
+    日评估，每次采食都会归入到该评估中
+    :param pid:
+    :param intake:
+    :param weight:
+    :param sys_time:
+    :return:
+    '''
+    print('pid {}' % pid)
+    print('intake {}' % intake)
+    print('weight {}' % weight)
+    print('sys_time {}' % transform_time(sys_time, '%Y%m%d'))
+
 
 @admin.route('/admin/pigbase/add_one_record', methods=['POST'])
 def add_one_record():
@@ -52,8 +105,7 @@ def add_one_record():
 
         if pig_identity_info:
             pid = pig_identity_info.get('pid')
-
-            PigBase({
+            new_pigbase_record = PigBase({
                 'pid': pid,
                 'food_intake': food_intake,
                 'weight': weight,
@@ -67,6 +119,8 @@ def add_one_record():
                 'end_time': end_time,
                 'sys_time': sys_time,
             }).add_one()
+            # 今日首次采食判断处理
+            today_first_intook_proc(sys_time=sys_time, pid=pid, pigbase_id=new_pigbase_record.id)
             # 检查是否更换了测定站
             if stationid != pig_identity_info.get('stationid'):
                 PigList({
@@ -78,15 +132,15 @@ def add_one_record():
             # 1、新增种猪记录
             # 2、刷新内存数据
             # 3、获取到 pid，将基础数据写入
-            new_record = PigList({
+            new_piglist_record = PigList({
                 'facnum': '', # 系统自动生成的记录，不分配 facnum
                 'stationid': stationid,
                 'animalnum': '', # 系统自动生成的记录，不分配种猪号
                 'earid': earid,
                 'entry_time': get_now_timestamp(),
             }).entry_one()
-            PigBase({
-                'pid': new_record.id,
+            new_pigbase_record = PigBase({
+                'pid': new_piglist_record.id,
                 'food_intake': food_intake,
                 'weight': weight,
                 'body_long': body_long,
@@ -99,6 +153,9 @@ def add_one_record():
                 'end_time': end_time,
                 'sys_time': sys_time,
             }).add_one()
+            # 今日首次采食判断处理
+            today_first_intook_proc(sys_time=sys_time, pid=new_piglist_record.id, pigbase_id=new_pigbase_record.id)
+
             initialize_piglist_async()
 
         # ------------------- 智能测定站转换 -------------------
@@ -160,8 +217,8 @@ def get_baseinfo():
 
     except Exception as e:
         error_logger(e)
-        error_logger(error_code['1001_0001'])
-        return error_response(error_code['1001_0001'])
+        error_logger(error_code['1002_0003'])
+        return error_response(error_code['1002_0003'])
 
 
 # @Todo
