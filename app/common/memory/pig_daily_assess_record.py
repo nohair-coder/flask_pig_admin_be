@@ -161,7 +161,7 @@ def update_today_record(pid, *, record_date, food_intake_count, food_intake_tota
     :return:
     '''
     try:
-        PigDailyAssess({
+        return PigDailyAssess({
             'pid': pid,
             'food_intake_count': food_intake_count,
             'food_intake_total': food_intake_total,
@@ -169,7 +169,7 @@ def update_today_record(pid, *, record_date, food_intake_count, food_intake_tota
             'prev_weight_compare': prev_weight_compare,
             'prev_foodintake_compare': prev_foodintake_compare,
             'record_date': record_date,
-        }).update_one()
+        }).update_one() == 1
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_5004'])
@@ -221,6 +221,8 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
             prev = record.get('prev')
             has_prev = prev != None
 
+            print('prev => ', prev)
+
             if not has_prev:
                 # - 该猪在内存有一次采食记录
                 #     - 这条记录的日期是昨天的：这次数据直接和前一天进行比较，创建记录，转移 recent 和 prev
@@ -231,7 +233,7 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                 print('recent ', recent)
                 print('prev ', prev)
                 print('<---------------------->')
-                if recent.get('recod_date') != intake_date:
+                if recent.get('record_date') != intake_date:
                     # 日期已经过期了，需要将 recent 变更为 prev
                     new_recent = {
                         'record_date': intake_date,
@@ -256,7 +258,7 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                     }
 
                 else:
-                    # recent.get('recod_date') == intake_date  => recent 对应的是今天的日期不用变更指向
+                    # recent.get('record_date') == intake_date  => recent 对应的是今天的日期不用变更指向
                     new_count = recent.get('food_intake_count') + 1
                     new_intake_total = recent.get('food_intake_total') + intake
                     new_weight_ave = (recent.get('weight_ave') * recent.get('food_intake_count') + weight) / new_count
@@ -276,9 +278,9 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                     print('prev ', recent)
                     print('<---------------------->')
                     # 更改数据库中的数据
-                    update_today_record(pid, **new_recent)
-                    # 更新到内存
-                    pig_daily_assess_record[pid]['recent'] = new_recent
+                    if update_today_record(pid, **new_recent):
+                        # 更新到内存
+                        pig_daily_assess_record[pid]['recent'] = new_recent
             else:
                 # 有 prev、recent 记录
                 print('pid {pid}，有 prev、recent 记录'.format(pid=pid))
@@ -322,6 +324,9 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                     update_today_record(pid, **new_recent)
                     # 更新到内存
                     pig_daily_assess_record[pid]['recent'] = new_recent
+
+
+        print('pig_daily_assess_record ', pig_daily_assess_record)
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_5005'])

@@ -77,7 +77,7 @@ class PigDailyAssess(db.Model):
         依据种猪 pid、record_date 修改对应的当天的记录
         :return:
         '''
-        PigDailyAssess.query.filter(and_(PigDailyAssess.pid.__eq__(self.pid), PigDailyAssess.pid.__eq__(self.record_date))).update({
+        ret = PigDailyAssess.query.filter(and_(PigDailyAssess.pid.__eq__(self.pid), PigDailyAssess.record_date.__eq__(self.record_date))).update({
             'food_intake_count': self.food_intake_count,
             'food_intake_total': self.food_intake_total,
             'weight_ave': self.weight_ave,
@@ -85,6 +85,7 @@ class PigDailyAssess(db.Model):
             'prev_foodintake_compare': self.prev_foodintake_compare,
         })
         db.session.commit()
+        return ret
 
     def get_all_from_pid(self):
         '''

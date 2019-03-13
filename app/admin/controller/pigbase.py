@@ -14,6 +14,7 @@ from app.common.memory.piglist import initialize_piglist_async, get_pig_info
 from app.common.memory.stationlist import stationid_exist, initialize_station_list_async
 from app.common.memory.daily_intake_start_time import is_after_intake_start_time
 from app.common.memory.daily_first_intake_record import has_pig_today_intook, reset_record, is_record_outdated, add_pid
+from app.common.memory.pig_daily_assess_record import calc_today_intake
 from app.common.errorcode import error_code
 
 
@@ -62,10 +63,9 @@ def daily_assess(*, pid, intake, weight, sys_time):
     :param sys_time:
     :return:
     '''
-    print(pid)
-    print(intake)
-    print(weight)
-    print(transform_time(sys_time, '%Y%m%d'))
+
+    # 将采食记录归入日采食记录
+    calc_today_intake(pid, intake=intake, weight=weight, intake_date=transform_time(sys_time, '%Y%m%d'))
 
 
 @admin.route('/admin/pigbase/add_one_record', methods=['POST'])
