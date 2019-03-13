@@ -62,10 +62,10 @@ def daily_assess(*, pid, intake, weight, sys_time):
     :param sys_time:
     :return:
     '''
-    print('pid {}' % pid)
-    print('intake {}' % intake)
-    print('weight {}' % weight)
-    print('sys_time {}' % transform_time(sys_time, '%Y%m%d'))
+    print(pid)
+    print(intake)
+    print(weight)
+    print(transform_time(sys_time, '%Y%m%d'))
 
 
 @admin.route('/admin/pigbase/add_one_record', methods=['POST'])
@@ -121,6 +121,8 @@ def add_one_record():
             }).add_one()
             # 今日首次采食判断处理
             today_first_intook_proc(sys_time=sys_time, pid=pid, pigbase_id=new_pigbase_record.id)
+            # 将当前记录归入日评估
+            daily_assess(pid=pid, sys_time=sys_time, intake=food_intake, weight=weight)
             # 检查是否更换了测定站
             if stationid != pig_identity_info.get('stationid'):
                 PigList({
@@ -155,6 +157,8 @@ def add_one_record():
             }).add_one()
             # 今日首次采食判断处理
             today_first_intook_proc(sys_time=sys_time, pid=new_piglist_record.id, pigbase_id=new_pigbase_record.id)
+            # 将当前记录归入日评估
+            daily_assess(pid=new_piglist_record.id, sys_time=sys_time, intake=food_intake, weight=weight)
 
             initialize_piglist_async()
 

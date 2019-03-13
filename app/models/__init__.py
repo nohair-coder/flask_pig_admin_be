@@ -14,4 +14,5 @@ from .userfindpass import UserFindPass
 from .piglist import PigList
 from .pigbase import PigBase
 from .pig_daily_first_intake import PigDailyFirstIntake
+from .pig_daily_assess import PigDailyAssess
 
