@@ -5,17 +5,19 @@
 # 基础信息查看，时间限定，种猪号限定，测定站限定
 
 from flask import request
+
 from app.admin import admin
-from app.admin.logic.piglist import get_piglist_from_station_action
 from app.admin.logic.pigbase import add_one_record_action
-from app.models import PigBase, StationInfo, PigList, PigDailyFirstIntake
-from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time, transform_time, asyncFunc
+from app.admin.logic.piglist import get_piglist_from_station_action
+from app.common.errorcode import error_code
+from app.common.memory.daily_first_intake_record import has_pig_today_intook, reset_record, is_record_outdated, add_pid
+from app.common.memory.daily_intake_start_time import is_after_intake_start_time
+from app.common.memory.pig_daily_assess_record import calc_today_intake
 from app.common.memory.piglist import initialize_piglist_async, get_pig_info
 from app.common.memory.stationlist import stationid_exist, initialize_station_list_async
-from app.common.memory.daily_intake_start_time import is_after_intake_start_time
-from app.common.memory.daily_first_intake_record import has_pig_today_intook, reset_record, is_record_outdated, add_pid
-from app.common.memory.pig_daily_assess_record import calc_today_intake
-from app.common.errorcode import error_code
+from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time, \
+    transform_time, asyncFunc
+from app.models import PigBase, StationInfo, PigList, PigDailyFirstIntake
 
 
 @asyncFunc
@@ -63,7 +65,6 @@ def daily_assess(*, pid, intake, weight, sys_time):
     :param sys_time:
     :return:
     '''
-
     # 将采食记录归入日采食记录
     calc_today_intake(pid, intake=intake, weight=weight, intake_date=transform_time(sys_time, '%Y%m%d'))
 
@@ -135,9 +136,9 @@ def add_one_record():
             # 2、刷新内存数据
             # 3、获取到 pid，将基础数据写入
             new_piglist_record = PigList({
-                'facnum': '', # 系统自动生成的记录，不分配 facnum
+                'facnum': '',  # 系统自动生成的记录，不分配 facnum
                 'stationid': stationid,
-                'animalnum': '', # 系统自动生成的记录，不分配种猪号
+                'animalnum': '',  # 系统自动生成的记录，不分配种猪号
                 'earid': earid,
                 'entry_time': get_now_timestamp(),
             }).entry_one()
@@ -184,6 +185,7 @@ def add_one_record():
         error_logger(error_code['1002_0001'])
         return error_response(error_code['1002_0001'])
 
+
 @admin.route('/admin/pigbase/', methods=['GET'])
 def get_baseinfo():
     '''
@@ -198,7 +200,7 @@ def get_baseinfo():
             return error_response(param_checker['err_msg'])
 
         stationid = request_data.get('stationid')
-        noexit = False if request_data.get('noexit') == 'false' else True # 默认 为 True，不查询已经出栏的
+        noexit = False if request_data.get('noexit') == 'false' else True  # 默认 为 True，不查询已经出栏的
 
         piglist_res = PigList({
             'stationid': stationid,
@@ -208,7 +210,7 @@ def get_baseinfo():
 
         for r in piglist_res:
             ret.append({
-                'id': r.id, # 记录的 id
+                'id': r.id,  # 记录的 id
                 'facnum': r.facnum,
                 'animalnum': r.animalnum,
                 'earid': r.earid,
@@ -223,8 +225,3 @@ def get_baseinfo():
         error_logger(e)
         error_logger(error_code['1002_0003'])
         return error_response(error_code['1002_0003'])
-
-
-# @Todo
-# 1、指定时间之后的第一次数据的采集
-# 2、每天的体重均值，进食次数 => 表的完善

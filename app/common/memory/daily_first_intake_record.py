@@ -19,7 +19,7 @@ def add_pid(pid):
     :return:
     '''
     daily_first_intake_record['pids'].add(pid)
-    print(daily_first_intake_record)
+    # print(daily_first_intake_record)
 
 
 def reset_record(ts):

@@ -197,7 +197,7 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
 
         # 没有记录，则 prev_weight_compare = 0, prev_foodintake_compare = 0
         if record == None:
-            print('没有记录')
+            # print('没有记录')
 
             recent = {
                 'record_date': intake_date,
@@ -213,26 +213,26 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
             pig_daily_assess_record[pid] = {
                 'recent': recent,
             }
-            print('record == None ', recent)
-            print('record == None 添加到内存中了')
+            # print('record == None ', recent)
+            # print('record == None 添加到内存中了')
         # 下面的都是有记录的
         else:
             recent = record.get('recent')
             prev = record.get('prev')
             has_prev = prev != None
 
-            print('prev => ', prev)
+            # print('prev => ', prev)
 
             if not has_prev:
                 # - 该猪在内存有一次采食记录
                 #     - 这条记录的日期是昨天的：这次数据直接和前一天进行比较，创建记录，转移 recent 和 prev
                 #     - 这条记录的日期是今天的：直接进行今天的当日计算，不用进行比较
-                print('<---------------------->')
-                print('pid {pid}，没有 prev 记录'.format(pid=pid))
-                print('在计算之前')
-                print('recent ', recent)
-                print('prev ', prev)
-                print('<---------------------->')
+                # print('<---------------------->')
+                # print('pid {pid}，没有 prev 记录'.format(pid=pid))
+                # print('在计算之前')
+                # print('recent ', recent)
+                # print('prev ', prev)
+                # print('<---------------------->')
                 if recent.get('record_date') != intake_date:
                     # 日期已经过期了，需要将 recent 变更为 prev
                     new_recent = {
@@ -243,12 +243,12 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                         'prev_weight_compare': weight - recent.get('weight_ave'),
                         'prev_foodintake_compare': intake - recent.get('food_intake_total'),
                     }
-                    print('<---------------------->')
-                    print('recent 的 record_date 不等于 intake_date')
-                    print('在计算之后')
-                    print('recent ', new_recent)
-                    print('prev ', recent)
-                    print('<---------------------->')
+                    # print('<---------------------->')
+                    # print('recent 的 record_date 不等于 intake_date')
+                    # print('在计算之后')
+                    # print('recent ', new_recent)
+                    # print('prev ', recent)
+                    # print('<---------------------->')
                     # 更改数据库中数据
                     add_today_record(pid, **new_recent)
                     # 更新到内存
@@ -271,19 +271,19 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                         'prev_weight_compare': 0,
                         'prev_foodintake_compare': 0,
                     }
-                    print('<---------------------->')
-                    print('recent 的 record_date 等于 intake_date')
-                    print('在计算之后')
-                    print('recent ', new_recent)
-                    print('prev ', recent)
-                    print('<---------------------->')
+                    # print('<---------------------->')
+                    # print('recent 的 record_date 等于 intake_date')
+                    # print('在计算之后')
+                    # print('recent ', new_recent)
+                    # print('prev ', recent)
+                    # print('<---------------------->')
                     # 更改数据库中的数据
                     if update_today_record(pid, **new_recent):
                         # 更新到内存
                         pig_daily_assess_record[pid]['recent'] = new_recent
             else:
                 # 有 prev、recent 记录
-                print('pid {pid}，有 prev、recent 记录'.format(pid=pid))
+                # print('pid {pid}，有 prev、recent 记录'.format(pid=pid))
                 # - 该猪在内存有两次采食记录
                 #     - 最新的记录日期已经过期：这次数据直接和前一天进行比较，创建记录，转移 recent 和 prev
                 #     - 最新的记录日期是今天：提取今天的数据，和前一天进行比较，保存
@@ -325,8 +325,7 @@ def calc_today_intake(pid, *, intake, weight, intake_date):
                     # 更新到内存
                     pig_daily_assess_record[pid]['recent'] = new_recent
 
-
-        print('pig_daily_assess_record ', pig_daily_assess_record)
+        # print('pig_daily_assess_record ', pig_daily_assess_record)
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_5005'])
