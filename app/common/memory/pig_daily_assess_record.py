@@ -4,7 +4,7 @@
 from app.common.errorcode import error_code
 from app.common.util import asyncFunc
 from app.common.util import error_logger
-from app.common.util import get_now_time, transform_time, get_now_timestamp
+from app.common.util import get_now_time
 from app.models import PigDailyAssess
 
 # 初始数据载入：查询到种猪最近两天（如果有）的日采食数据，将当前 datestring 和 最新的时间做比较，如果某头猪的最新两天采食记录时间更早，则删除最早的时间记录，保存今天和今天的前一天（有数据的前一天）的记录
@@ -34,6 +34,7 @@ pig_daily_assess_record = {
     #     }
     # }, # ...
 }
+
 
 def initialize_pig_daily_assess_record():
     '''
@@ -77,6 +78,7 @@ def initialize_pig_daily_assess_record():
         error_logger(e)
         error_logger(error_code['1100_5001'])
 
+
 @asyncFunc
 def initialize_pig_daily_assess_record_async():
     '''
@@ -84,6 +86,7 @@ def initialize_pig_daily_assess_record_async():
     :return:
     '''
     initialize_pig_daily_assess_record()
+
 
 def has_today_intake(pid=0):
     '''
@@ -104,6 +107,7 @@ def has_today_intake(pid=0):
         error_logger(e)
         error_logger(error_code['1100_5002'])
 
+
 def get_pig_last_two_days_record(pid):
     '''
     获取 pid 种猪的采食数据
@@ -115,6 +119,7 @@ def get_pig_last_two_days_record(pid):
         return record
     return None
 
+
 def has_prev_record(pid):
     '''
     种猪有 prev 对应的记录
@@ -123,6 +128,7 @@ def has_prev_record(pid):
     '''
     record = pig_daily_assess_record.get(pid)
     return record.get('prev') != None
+
 
 def has_recent_record(pid):
     '''
@@ -134,7 +140,8 @@ def has_recent_record(pid):
     return record.get('recent') != None
 
 
-def add_today_record(pid, *, record_date, food_intake_count, food_intake_total, weight_ave, prev_weight_compare, prev_foodintake_compare):
+def add_today_record(pid, *, record_date, food_intake_count, food_intake_total, weight_ave, prev_weight_compare,
+                     prev_foodintake_compare):
     '''
     将当天计算好的数据保存到数据库，新增一条当天数据
     :param params:
@@ -154,7 +161,9 @@ def add_today_record(pid, *, record_date, food_intake_count, food_intake_total, 
         error_logger(e)
         error_logger(error_code['1100_5003'])
 
-def update_today_record(pid, *, record_date, food_intake_count, food_intake_total, weight_ave, prev_weight_compare, prev_foodintake_compare):
+
+def update_today_record(pid, *, record_date, food_intake_count, food_intake_total, weight_ave, prev_weight_compare,
+                        prev_foodintake_compare):
     '''
     将当天计算好的数据保存到数据库，更新当天数据
     :param params:
@@ -173,6 +182,7 @@ def update_today_record(pid, *, record_date, food_intake_count, food_intake_tota
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1100_5004'])
+
 
 @asyncFunc
 def calc_today_intake(pid, *, intake, weight, intake_date):
