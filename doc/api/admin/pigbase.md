@@ -10,9 +10,9 @@ __params__
 - `body_long` `string` `required` 体长
 - `body_width` `string` `required` 体宽
 - `body_height` `string` `required` 体高
-- `body_temp` `string` `option` 体温
-- `env_temp` `string` `option` 环境温度
-- `env_humi` `string` `option` 环境湿度
+- `body_temp` `string` 体温
+- `env_temp` `string` 环境温度
+- `env_humi` `string` 环境湿度
 - `start_time` `string` `required` 采食开始时间
 - `end_time` `string` `required` 采食结束时间
 
