@@ -69,7 +69,7 @@ def daily_assess(*, pid, intake, weight, sys_time):
     calc_today_intake(pid, intake=intake, weight=weight, intake_date=transform_time(sys_time, '%Y%m%d'))
 
 
-@admin.route('/admin/pigbase/add_one_record', methods=['POST'])
+@admin.route('/admin/pigbase/', methods=['POST'])
 def add_one_record():
     '''
     种猪一次采食，数据插入表中
