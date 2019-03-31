@@ -106,7 +106,7 @@ class PigBase(db.Model):
                 .limit(length_per_page + 1)
 
 
-    def get_from_one_pig(self, *, earid, from_id, from_time, end_time):
+    def get_from_one_pig(self, *, ear_id, from_id, from_time, end_time):
         '''
         获取某头种猪的历史信息
         :return:
@@ -118,7 +118,7 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.earid.__eq__(earid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.earid.__eq__(ear_id), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
@@ -131,11 +131,11 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.earid.__eq__(earid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.earid.__eq__(ear_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 
-    def get_from_one_station(self, *, stationid, from_id, from_time, end_time):
+    def get_from_one_station(self, *, station_id, from_id, from_time, end_time):
         '''
         获取某个测定站的种猪信息
         :return:
@@ -147,7 +147,7 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.stationid.__eq__(station_id), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
@@ -160,7 +160,7 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.stationid.__eq__(station_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 

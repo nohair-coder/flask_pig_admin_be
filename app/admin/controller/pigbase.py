@@ -191,15 +191,16 @@ def get_pig_base_info():
     查询种猪的基础信息
     :param type: all、station、one
     :param fromId: 初始的 id
-    :param earid: 对应 pig
-    :param stationid: 对应 station
+    :param earId: 对应 pig
+    :param stationId: 对应 station
     :param fromTime: 起始时间 10 位数字时间戳
     :param endTime: 起始时间 10 位数字时间戳
     :return:
     '''
     request_data = request.args
-    type = request_data.get('type', None)
+    type = request_data.get('type', 'all')
     from_id = request_data.get('fromId', None)
+
     res = None
     ret = {
         'list': [],
@@ -215,17 +216,17 @@ def get_pig_base_info():
 
         if type == 'station':
             # 'station'
-            stationid = request_data.get('stationid')
-            if bool(stationid):
-                res = PigBase().get_from_one_station(stationid=stationid, from_id=from_id, from_time=from_time, end_time=end_time)
+            station_id = request_data.get('stationId')
+            if bool(station_id):
+                res = PigBase().get_from_one_station(station_id=station_id, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
                 return error_response('缺少测定站号')
 
         elif type == 'one':
             # 'one'
-            earid = request_data.get('earid')
-            if bool(earid):
-                res = PigBase().get_from_one_pig(earid=earid, from_id=from_id, from_time=from_time, end_time=end_time)
+            ear_id = request_data.get('earId')
+            if bool(ear_id):
+                res = PigBase().get_from_one_pig(ear_id=ear_id, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
                 return error_response('缺少耳标号')
 
