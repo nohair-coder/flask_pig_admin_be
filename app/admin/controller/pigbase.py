@@ -8,7 +8,6 @@ from flask import request
 
 from app.admin import admin
 from app.admin.logic.pigbase import add_one_record_action
-from app.admin.logic.piglist import get_piglist_from_station_action
 from app.common.errorcode import error_code
 from app.common.memory.daily_first_intake_record import has_pig_today_intook, reset_record, is_record_outdated, add_pid
 from app.common.memory.daily_intake_start_time import is_after_intake_start_time
@@ -18,6 +17,7 @@ from app.common.memory.stationlist import stationid_exist, initialize_station_li
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp, get_now_time, \
     transform_time, asyncFunc
 from app.models import PigBase, StationInfo, PigList, PigDailyFirstIntake
+from app.config import length_per_page
 
 
 @asyncFunc
@@ -70,7 +70,7 @@ def daily_assess(*, pid, intake, weight, sys_time):
 
 
 @admin.route('/admin/pigbase/', methods=['POST'])
-def add_one_record():
+def pig_intake_once():
     '''
     种猪一次采食，数据插入表中
     :return:
@@ -185,43 +185,89 @@ def add_one_record():
         error_logger(error_code['1002_0001'])
         return error_response(error_code['1002_0001'])
 
-
 @admin.route('/admin/pigbase/', methods=['GET'])
-def get_baseinfo():
+def get_pig_base_info():
     '''
-    查询种猪基础信息
+    查询种猪的基础信息
+    :param type: all、station、one
+    :param fromId: 初始的 id
+    :param earid: 对应 pig
+    :param stationid: 对应 station
+    :param fromTime: 起始时间 10 位数字时间戳
+    :param endTime: 起始时间 10 位数字时间戳
     :return:
     '''
+    request_data = request.args
+    type = request_data.get('type', None)
+    from_id = request_data.get('fromId', None)
+    res = None
+    ret = {
+        'list': [],
+        'lastId': 0,
+        'hasNextPage': False,
+    }
     try:
-        request_data = request.json
-        param_checker = get_piglist_from_station_action(request_data)
-        if not param_checker['type']:
-            error_logger(param_checker['err_msg'])
-            return error_response(param_checker['err_msg'])
+        from_time = request_data.get('fromTime', None)  # 直接接收10位的数字时间戳
+        from_time = 0 if from_time == None else from_time
 
-        stationid = request_data.get('stationid')
-        noexit = False if request_data.get('noexit') == 'false' else True  # 默认 为 True，不查询已经出栏的
+        end_time = request_data.get('endTime', None)  # 直接接收10位的数字时间戳
+        end_time = get_now_timestamp() if end_time == None else end_time
 
-        piglist_res = PigList({
-            'stationid': stationid,
-        }).get_from_station(noexit)
+        if type == 'station':
+            # 'station'
+            stationid = request_data.get('stationid')
+            if bool(stationid):
+                res = PigBase().get_from_one_station(stationid=stationid, from_id=from_id, from_time=from_time, end_time=end_time)
+            else:
+                return error_response('缺少测定站号')
 
-        ret = []
+        elif type == 'one':
+            # 'one'
+            earid = request_data.get('earid')
+            if bool(earid):
+                res = PigBase().get_from_one_pig(earid=earid, from_id=from_id, from_time=from_time, end_time=end_time)
+            else:
+                return error_response('缺少耳标号')
 
-        for r in piglist_res:
-            ret.append({
-                'id': r.id,  # 记录的 id
-                'facnum': r.facnum,
-                'animalnum': r.animalnum,
-                'earid': r.earid,
-                'stationid': r.stationid,
-                'entry_time': r.entry_time,
-                'exit_time': r.exit_time,
-            })
+        else:
+            # all
+            res = PigBase().get_from_all_stations(from_id=from_id, from_time=from_time, end_time=end_time)
 
-        return success_response(ret)
+        # k v 赋值
+        for ind, item in enumerate(res):
+            if ind < length_per_page:
+                ret['list'].append({
+                    # pig_base
+                    'id': item.id,
+                    'pid': item.pid,
+                    'foodIntake': item.food_intake,
+                    'weight': item.weight,
+                    'bodyLong': item.body_long,
+                    'bodyWidth': item.body_width,
+                    'bodyHeight': item.body_height,
+                    'bodyTemp': item.body_temp,
+                    'envTemp': item.env_temp,
+                    'envHumi': item.env_humi,
+                    'startTime': item.start_time,
+                    'endTime': item.end_time,
+                    'sysTime': item.sys_time,
 
+                    # pig_list
+                    'facNum': item.facnum,
+                    'animalNum': item.animalnum,
+                    'earId': item.earid,
+                    'stationId': item.stationid,
+                    'entryTime': item.entry_time,
+                })
+            if ind == length_per_page:
+                ret['hasNextPage'] = True
+
+        if ret['hasNextPage']:
+            ret['lastId'] = ret['list'][-1:][0].get('id')  # 获取最后一条记录的 id， 在下一次
+        else:
+            ret['lastId'] = 0
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1002_0003'])
         return error_response(error_code['1002_0003'])
+    return success_response(ret)

@@ -5,6 +5,7 @@ from sqlalchemy import and_, desc
 
 from app import db
 from app.config import length_per_page
+from .piglist import PigList
 
 
 class PigBase(db.Model):
@@ -69,62 +70,99 @@ class PigBase(db.Model):
         :return:
         '''
         if from_id != None:
-            return PigBase \
-                .query \
-                .filter(
-                and_(PigBase.id.__lt__(from_id), PigBase.sys_time.__ge__(from_time), PigBase.sys_time.__le__(end_time))) \
-                .order_by(desc(PigBase.sys_time), desc(PigBase.id)) \
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
-            return PigBase \
-                .query \
-                .filter(and_(PigBase.sys_time.__ge__(from_time),
-                             PigBase.sys_time.__le__(end_time))) \
-                .order_by(desc(PigBase.sys_time), desc(PigBase.id)) \
+            # stmt = db.session \
+            #     .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+            #            PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+            #            PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+            #            PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+            #     .outerjoin(PigList, PigList.id == PigBase.pid) \
+            #     .filter(and_(PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+            #     .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
+            #     .limit(length_per_page + 1) \
+            #     .subquery()
+            #
+            # print(stmt)
+
+            # (452, 14, 7.22, 181.11, 120.33, 30.22, 50.44, 1.0, 2.0, 3.0, 1552017439, 1552017448, 1553082227, '', '', 'xxxxxxxxxcde', 'asdfghjklqwe', 1553082227)
+            # 可以通过属性或者下标访问
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 
-    def get_from_one_pig(self, *, pid, from_id, from_time, end_time):
+
+    def get_from_one_pig(self, *, earid, from_id, from_time, end_time):
         '''
         获取某头种猪的历史信息
         :return:
         '''
         if from_id != None:
-            return PigBase \
-                .query \
-                .filter(and_(PigBase.id.__lt__(from_id), PigBase.pid.__eq__(pid), PigBase.sys_time.__ge__(from_time),
-                             PigBase.sys_time.__le__(end_time))) \
-                .order_by(desc(PigBase.sys_time), desc(PigBase.id)) \
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigList.earid.__eq__(earid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
-            return PigBase \
-                .query \
-                .filter(and_(PigBase.pid.__eq__(pid), PigBase.sys_time.__ge__(from_time),
-                             PigBase.sys_time.__le__(end_time))) \
-                .order_by(desc(PigBase.sys_time), desc(PigBase.id)) \
+
+            # (452, 14, 7.22, 181.11, 120.33, 30.22, 50.44, 1.0, 2.0, 3.0, 1552017439, 1552017448, 1553082227, '', '', 'xxxxxxxxxcde', 'asdfghjklqwe', 1553082227)
+            # 可以通过属性或者下标访问
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigList.earid.__eq__(earid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 
-    def get_from_one_stations(self, *, stationid, from_id, from_time, end_time):
+    def get_from_one_station(self, *, stationid, from_id, from_time, end_time):
         '''
         获取某个测定站的种猪信息
-        :param offset:
         :return:
         '''
-        # if from_id != None:
-        #     return PigBase \
-        #         .query \
-        #         .filter(
-        #         and_(PigBase.id.__lt__(from_id), PigBase.stationid.__eq__(stationid), PigBase.systime.__ge__(from_time),
-        #              PigBase.systime.__le__(end_time))) \
-        #         .order_by(desc(PigBase.systime)) \
-        #         .limit(length_per_page + 1)
-        # else:
-        #     return PigBase \
-        #         .query \
-        #         .filter(
-        #         and_(PigBase.stationid.__eq__(stationid), PigBase.systime.__ge__(from_time),
-        #              PigBase.systime.__le__(end_time))) \
-        #         .order_by(desc(PigBase.systime)) \
-        #         .limit(length_per_page + 1)
+        if from_id != None:
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
+                .limit(length_per_page + 1)
+        else:
+
+            # (452, 14, 7.22, 181.11, 120.33, 30.22, 50.44, 1.0, 2.0, 3.0, 1552017439, 1552017448, 1553082227, '', '', 'xxxxxxxxxcde', 'asdfghjklqwe', 1553082227)
+            # 可以通过属性或者下标访问
+            return db.session \
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.start_time, PigBase.end_time, PigBase.sys_time,
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                .outerjoin(PigList, PigList.id == PigBase.pid) \
+                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
+                .limit(length_per_page + 1)
 
     def __repr__(self):
         return '<PigBase %r>' % self.pid
