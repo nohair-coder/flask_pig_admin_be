@@ -50,8 +50,8 @@ error_code = {
     '1002_0002': '1002_0002: 种猪日采食信息处理失败',
     '1002_0003': '1002_0003: 查询种猪基础信息失败',
 
-
-
+    # `app/admin/controller/station_weekly_assessment
+    '1003_0001': '1003_0001: 测定站周采食量统计数据处理失败',
 
 
     # `app/common/memory/stationinfo`

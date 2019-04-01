@@ -192,22 +192,23 @@ def get_pig_base_info():
     :param type: all、station、one
     :param fromId: 初始的 id
     :param earId: 对应 pig
-    :param stationId: 对应 station
+    :param stationId: 对应 station id
     :param fromTime: 起始时间 10 位数字时间戳
     :param endTime: 起始时间 10 位数字时间戳
     :return:
     '''
-    request_data = request.args
-    type = request_data.get('type', 'all')
-    from_id = request_data.get('fromId', None)
-
-    res = None
-    ret = {
-        'list': [],
-        'lastId': 0,
-        'hasNextPage': False,
-    }
     try:
+        request_data = request.args
+        type = request_data.get('type', 'all')
+        from_id = request_data.get('fromId', None)
+
+        res = None
+        ret = {
+            'list': [],
+            'lastId': 0,
+            'hasNextPage': False,
+        }
+
         from_time = request_data.get('fromTime', None)  # 直接接收10位的数字时间戳
         from_time = 0 if from_time == None else from_time
 
@@ -216,17 +217,17 @@ def get_pig_base_info():
 
         if type == 'station':
             # 'station'
-            station_id = request_data.get('stationId')
-            if bool(station_id):
-                res = PigBase().get_from_one_station(station_id=station_id, from_id=from_id, from_time=from_time, end_time=end_time)
+            stationid = request_data.get('stationId')
+            if bool(stationid):
+                res = PigBase().get_from_one_station(stationid=stationid, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
                 return error_response('缺少测定站号')
 
         elif type == 'one':
             # 'one'
-            ear_id = request_data.get('earId')
-            if bool(ear_id):
-                res = PigBase().get_from_one_pig(ear_id=ear_id, from_id=from_id, from_time=from_time, end_time=end_time)
+            earid = request_data.get('earId')
+            if bool(earid):
+                res = PigBase().get_from_one_pig(earid=earid, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
                 return error_response('缺少耳标号')
 
@@ -267,8 +268,10 @@ def get_pig_base_info():
             ret['lastId'] = ret['list'][-1:][0].get('id')  # 获取最后一条记录的 id， 在下一次
         else:
             ret['lastId'] = 0
+        return success_response(ret)
+
     except Exception as e:
         error_logger(e)
         error_logger(error_code['1002_0003'])
         return error_response(error_code['1002_0003'])
-    return success_response(ret)
+

@@ -1,8 +1,5 @@
 # coding: utf8
 from app.common.config.define_name import define_name, define_name_pigbase
-from app.common.memory.facnum import facnum_exist
-from app.common.memory.piglist import animalnum_exist, earid_exist
-from app.common.memory.stationlist import stationid_exist
 from app.common.util.input_checker import param_err, check_len, is_none
 
 

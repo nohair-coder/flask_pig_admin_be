@@ -27,3 +27,10 @@ define_name_pigbase = dict(
     systime = '系统时间',
 
 )
+
+define_name_pig_daily_assess = dict(
+    start_time = '开始时间',
+    end_time = '结束时间',
+    entry_time = '入栏时间',
+    exit_time = '出栏时间',
+)
