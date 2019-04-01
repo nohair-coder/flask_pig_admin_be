@@ -16,7 +16,8 @@ from app.common.errorcode import error_code
 @admin.route('/admin/piglist/get_piglist_from_station/', methods=['GET'])
 def get_piglist_from_station():
     '''
-    查询一栏里面的所有猪的相关信息
+    查询一栏里面的所有猪
+    :param stationId: 对应 station id
     :return:
     '''
     try:
@@ -26,7 +27,7 @@ def get_piglist_from_station():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        stationid = request_data.get('stationid')
+        stationid = request_data.get('stationId')
         noexit = False if request_data.get('noexit') == 'false' else True # 默认 为 True，不查询已经出栏的
 
         piglist_res = PigList({
@@ -38,12 +39,12 @@ def get_piglist_from_station():
         for r in piglist_res:
             ret.append({
                 'id': r.id, # 记录的 id
-                'facnum': r.facnum,
-                'animalnum': r.animalnum,
-                'earid': r.earid,
-                'stationid': r.stationid,
-                'entry_time': r.entry_time,
-                'exit_time': r.exit_time,
+                'facNum': r.facnum,
+                'animalNum': r.animalnum,
+                'earId': r.earid,
+                'stationId': r.stationid,
+                'entryTime': r.entry_time,
+                'exitTime': r.exit_time,
             })
 
         return success_response(ret)
@@ -57,6 +58,10 @@ def get_piglist_from_station():
 def entry_one():
     '''
     入栏一头猪
+    :param facNum: 猪场代码
+    :param animalNum: 种猪号
+    :param earId: 耳标号
+    :param stationId: 测定站号
     :return:
     '''
     try:
@@ -66,10 +71,10 @@ def entry_one():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        facnum = request_data.get('facnum')
-        animalnum = request_data.get('animalnum')
-        earid = request_data.get('earid')
-        stationid = request_data.get('stationid')
+        facnum = request_data.get('facNum')
+        animalnum = request_data.get('animalNum')
+        earid = request_data.get('earId')
+        stationid = request_data.get('stationId')
         entry_time = get_now_timestamp()
 
         pig_data = {
@@ -95,6 +100,7 @@ def entry_one():
 def exit_one():
     '''
     出栏一头猪，出栏不是删除一头猪，而是将该猪的出栏时间填充上即可
+    :param pid: 出栏一头猪
     :return:
     '''
     try:
@@ -104,10 +110,10 @@ def exit_one():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        id = request_data.get('id')
+        pid = request_data.get('pid')
 
         PigList({
-            'id': id,
+            'id': pid,
             'exit_time': get_now_timestamp(),
         }).exit_one()
 
@@ -124,6 +130,7 @@ def exit_one():
 def exit_one_station():
     '''
     出栏一个测定站的所有猪
+    :param stationId: 测定站号
     :return:
     '''
     try:
@@ -133,7 +140,7 @@ def exit_one_station():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        stationid = request_data.get('stationid')
+        stationid = request_data.get('stationId')
 
         PigList({
             'stationid': stationid,
@@ -152,6 +159,10 @@ def exit_one_station():
 def update_piginfo():
     '''
     修改一头种猪的信息，不包括出栏
+    :param pid: 种猪 id
+    :param facNum: 猪场代码
+    :param animalNum: 种猪号
+    :param earId: 耳标号
     :return:
     '''
     try:
@@ -162,13 +173,13 @@ def update_piginfo():
             return error_response(param_checker['err_msg'])
         # 不需要修改测定站 id，后面猪进食的时候，系统会自动将猪所属哪个测定站作比对，确定是否进行修正（换栏智能处理）
         #------------------------------------------------
-        id = request_data.get('id')
-        facnum = request_data.get('facnum')
-        animalnum = request_data.get('animalnum')
-        earid = request_data.get('earid')
+        pid = request_data.get('pid')
+        facnum = request_data.get('facNum')
+        animalnum = request_data.get('animalNum')
+        earid = request_data.get('earId')
 
         PigList({
-            'id': id,
+            'id': pid,
             'facnum': facnum,
             'animalnum': animalnum,
             'earid': earid,

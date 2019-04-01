@@ -12,7 +12,7 @@ def get_piglist_from_station_action(params):
     :param params:
     :return:
     '''
-    stationid = params.get('stationid')
+    stationid = params.get('stationId')
 
     if is_none(stationid) or not check_len(stationid, 12, 'le'):
         return param_err(define_name['stationid'])
@@ -28,10 +28,10 @@ def entry_one_action(params):
     :param params:
     :return:
     '''
-    facnum = params.get('facnum')
-    animalnum = params.get('animalnum')
-    earid = params.get('earid')
-    stationid = params.get('stationid')
+    facnum = params.get('facNum')
+    animalnum = params.get('animalNum')
+    earid = params.get('earId')
+    stationid = params.get('stationId')
 
     if is_none(facnum) or not check_len(facnum, 4, 'eq'):
         return param_err(define_name['facnum'])
@@ -64,10 +64,10 @@ def exit_one_action(params):
     :param params:
     :return:
     '''
-    id = params.get('id')
+    pid = params.get('pid')
 
-    if is_none(id):
-        return param_err('记录id')
+    if is_none(pid):
+        return param_err('种猪id')
 
     return dict(type=True)
 
@@ -78,7 +78,7 @@ def exit_one_station_action(params):
     :param params:
     :return:
     '''
-    stationid = params.get('stationid')
+    stationid = params.get('stationId')
 
     if is_none(stationid) or not check_len(stationid, 12, 'le'):
         return param_err(define_name['stationid'])
@@ -94,13 +94,13 @@ def update_piginfo_action(params):
     :param params:
     :return:
     '''
-    id = params.get('id')
-    facnum = params.get('facnum')
-    animalnum = params.get('animalnum')
-    earid = params.get('earid')
+    pid = params.get('pid')
+    facnum = params.get('facNum')
+    animalnum = params.get('animalNum')
+    earid = params.get('earId')
 
-    if is_none(id):
-        return param_err('记录id')
+    if is_none(pid):
+        return param_err('种猪id')
 
     if is_none(facnum) or not check_len(facnum, 4, 'eq'):
         return param_err(define_name['facnum'])

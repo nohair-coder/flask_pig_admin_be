@@ -1,7 +1,7 @@
 # admin/station_weekly_assessment
 
 ### `GET` /admin/station_weekly_assessment_info/
-添加一条测定站记录
+测定站周采食量统计
 __params__
 - `stationId` `string` `required` 测定站号
 - `startTime` `string` `required` 开始时间

@@ -32,7 +32,7 @@ demo
 
 
 ### `GET` /admin/pigbase/
-添加一条测定站记录
+查询种猪基础数据信息
 __params__
 - `type` `string` `required` 类型 `all` `station` `one`
 - `fromId` `string` 起始查找的 id （不包括）
