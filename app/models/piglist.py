@@ -37,7 +37,7 @@ class PigList(db.Model):
         '''
         return PigList.query.filter(PigList.exit_time.is_(None)).with_entities(PigList.id, PigList.animalnum, PigList.earid, PigList.stationid).all()
 
-    def get_from_station(self, noexit):
+    def get_from_station(self, noexit=True):
         '''
         依据测定站查询猪列表
         :return:

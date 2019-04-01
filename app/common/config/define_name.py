@@ -34,3 +34,4 @@ define_name_pig_daily_assess = dict(
     entry_time = '入栏时间',
     exit_time = '出栏时间',
 )
+
