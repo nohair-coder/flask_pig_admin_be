@@ -32,12 +32,13 @@ def get_station_weekly_assessment_info():
         start_date = transform_time(int(request_data.get('startTime')), '%Y%m%d')
         end_date = transform_time(int(request_data.get('endTime')), '%Y%m%d')
 
+        # 并表查询
         res = db.session.query(PigList.id, PigList.facnum, PigList.animalnum, PigList.earid,
                                PigDailyAssess.food_intake_total, PigDailyAssess.record_date) \
             .join(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
-            .filter(PigList.stationid == stationid, PigDailyAssess.record_date >= start_date, PigDailyAssess.record_date <= end_date) \
+            .filter(PigList.stationid == stationid, PigDailyAssess.record_date >= start_date,
+                    PigDailyAssess.record_date <= end_date) \
             .all()
-
 
         # 日期转换
         date_transformer = {
@@ -84,7 +85,6 @@ def get_station_weekly_assessment_info():
             v['day6'] = day_intake_total.get('day6', 0)
             v['day7'] = day_intake_total.get('day7', 0)
             v['total'] = round(v['day1'] + v['day2'] + v['day3'] + v['day4'] + v['day5'] + v['day6'] + v['day7'], 2)
-
             v['ave'] = round(v['total'] / day_intake_total.get('count'), 2)
 
         return success_response(ret)
