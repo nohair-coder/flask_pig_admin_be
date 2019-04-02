@@ -57,6 +57,10 @@ error_code = {
     '1004_0001': '1004_0001: 个体采食量趋势数据处理失败',
     '1004_0002': '1004_0002: 测定站某日每头猪的采食总量数据处理失败',
 
+    # `app/admin/controller/graphanalyse
+    '1005_0001': '1005_0001: 采食量区间数据处理失败',
+
+
     # `app/common/memory/stationinfo`
     '1100_0001': '1100_0001: 测定站号列表存入内存失败',
     # `app/common/memory/facnum`
