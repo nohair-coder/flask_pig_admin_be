@@ -4,12 +4,17 @@ from app.common.util.input_checker import param_err, check_len, is_none, check_i
 
 
 def food_intake_interval_analysis_action(params):
+    s_type = params.get('type')
     stationid = params.get('stationId')
     start_time = params.get('startTime')
     end_time = params.get('endTime')
 
-    if is_none(stationid) or not check_len(stationid, 12, 'le'):
-        return param_err(define_name['stationid'])
+    if not check_in(s_type, ('all', 'one')):
+        return param_err('查询类型错误（一个或者所有测定站）')
+
+    if s_type == 'one':
+        if is_none(stationid) or not check_len(stationid, 12, 'le'):
+            return param_err(define_name['stationid'])
 
     if is_none(start_time):
         return param_err('开始时间')

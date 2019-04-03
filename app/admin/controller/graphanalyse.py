@@ -28,19 +28,28 @@ def food_intake_interval_analysis():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
+        s_type = request_data.get('type')
         stationid = request_data.get('stationId')
         start_time = request_data.get('startTime')
         end_time = request_data.get('endTime')
 
-        # 查询，时间都是用的 PigBase.start_time
-        res = db.session.query(PigList.id, PigBase.food_intake) \
-            .outerjoin(PigBase, PigList.id == PigBase.pid) \
-            .filter(PigList.stationid == stationid, PigBase.start_time >= start_time, PigBase.start_time <= end_time) \
-            .all()
+
+        if s_type == 'one':
+            # 查询，时间都是用的 PigBase.start_time
+            res = db.session.query(PigList.id, PigBase.food_intake) \
+                .outerjoin(PigBase, PigList.id == PigBase.pid) \
+                .filter(PigList.stationid == stationid, PigBase.start_time >= start_time, PigBase.start_time <= end_time) \
+                .all()
+        else:
+            # 查询所有测定站的数据
+            res = db.session.query(PigList.id, PigBase.food_intake) \
+                .outerjoin(PigBase, PigList.id == PigBase.pid) \
+                .filter(PigBase.start_time >= start_time, PigBase.start_time <= end_time) \
+                .all()
 
         record_count = 0  # 记录的总数，用来统计百分数
 
-        intake_percent = {
+        intake_interval_count = {
             '0-200': 0,  # [0, 200)
             '200-400': 0,  # [200, 400)
             '400-600': 0,
@@ -61,30 +70,31 @@ def food_intake_interval_analysis():
         for item in res:
             record_count = record_count + 1
             if item.food_intake < 200:
-                intake_percent['0-200'] = intake_percent['0-200'] + 1
+                intake_interval_count['0-200'] = intake_interval_count['0-200'] + 1
             elif item.food_intake < 400:
-                intake_percent['200-400'] = intake_percent['200-400'] + 1
+                intake_interval_count['200-400'] = intake_interval_count['200-400'] + 1
             elif item.food_intake < 600:
-                intake_percent['400-600'] = intake_percent['400-600'] + 1
+                intake_interval_count['400-600'] = intake_interval_count['400-600'] + 1
             elif item.food_intake < 800:
-                intake_percent['600-800'] = intake_percent['600-800'] + 1
+                intake_interval_count['600-800'] = intake_interval_count['600-800'] + 1
             elif item.food_intake < 1000:
-                intake_percent['800-1000'] = intake_percent['800-1000'] + 1
+                intake_interval_count['800-1000'] = intake_interval_count['800-1000'] + 1
             elif item.food_intake < 1200:
-                intake_percent['1000-1200'] = intake_percent['1000-1200'] + 1
+                intake_interval_count['1000-1200'] = intake_interval_count['1000-1200'] + 1
             elif item.food_intake < 1400:
-                intake_percent['1200-1400'] = intake_percent['1200-1400'] + 1
+                intake_interval_count['1200-1400'] = intake_interval_count['1200-1400'] + 1
             elif item.food_intake < 1600:
-                intake_percent['1400-1600'] = intake_percent['1400-1600'] + 1
+                intake_interval_count['1400-1600'] = intake_interval_count['1400-1600'] + 1
             else:
-                intake_percent['>1600'] = intake_percent['>1600'] + 1
+                intake_interval_count['>1600'] = intake_interval_count['>1600'] + 1
 
         if record_count != 0:
             # 计算百分数
-            for k in intake_percent:
+            for k in intake_interval_count:
                 ret['data'].append({
                     'intake': k,
-                    'frequency': round(intake_percent[k] / record_count, 2),
+                    'count': intake_interval_count[k],
+                    'frequency': round(intake_interval_count[k] / record_count, 2),
                 })
 
         ret['count'] = record_count

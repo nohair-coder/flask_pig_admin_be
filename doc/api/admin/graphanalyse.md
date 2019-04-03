@@ -3,7 +3,8 @@
 ### `GET` /admin/graphanalyse/food_intake_interval_analysis/
 采食量区间分析
 __params__
-- `stationId` `string` `required` 测定站 id
+- `type` `string` `required` 是选择的一个测定站还是所有的测定站 `all` `one`
+- `stationId` `string` 测定站 id
 - `startTime` `string` `required` 起始时间 10 位数字时间戳
 - `endTime` `string` `required` 起始时间 10 位数字时间戳
 
@@ -13,45 +14,55 @@ ret = {
     success: boolean,  // true || false
     err_msg: string, // 操作失败的时候，返回的错误信息
     data: {
-        "count": 443, // 总共的统计次数
+        "count": 443, // 这段是时间的总的记录数
         "data": [
             {
-                "frequency": 0.6, // 频率占比
+                "count": 267, // 采食量在 [0, 200) 之间的数量
+                "frequency": 0.6, // 频率
                 "intake": "0-200" // 采食量区间
             },
             {
+                "count": 132,
                 "frequency": 0.3,
                 "intake": "200-400"
             },
             {
+                "count": 38,
                 "frequency": 0.09,
                 "intake": "400-600"
             },
             {
+                "count": 4,
                 "frequency": 0.01,
                 "intake": "600-800"
             },
             {
+                "count": 2,
                 "frequency": 0,
                 "intake": "800-1000"
             },
             {
+                "count": 0,
                 "frequency": 0,
                 "intake": "1000-1200"
             },
             {
+                "count": 0,
                 "frequency": 0,
                 "intake": "1200-1400"
             },
             {
+                "count": 0,
                 "frequency": 0,
                 "intake": "1400-1600"
             },
             {
+                "count": 0,
                 "frequency": 0,
                 "intake": ">1600"
             },
             {
+                "count": 0,
                 "frequency": 0,
                 "intake": "count"
             }
