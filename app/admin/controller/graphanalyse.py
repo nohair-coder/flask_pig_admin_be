@@ -5,7 +5,7 @@ from flask import request
 
 from app import db
 from app.admin import admin
-from app.admin.logic.graphanalyse import food_intake_interval_analysis_action, weight_change_action
+from app.admin.logic.graphanalyse import food_intake_interval_analysis_action, weight_change_action, intake_frequency_in_day_interval_action
 from app.common.errorcode import error_code
 from app.common.util import error_response, success_response, error_logger
 from app.common.util.time import transform_time
@@ -40,7 +40,7 @@ def food_intake_interval_analysis():
 
         record_count = 0  # 记录的总数，用来统计百分数
 
-        ret = {
+        intake_percent = {
             '0-200': 0,  # [0, 200)
             '200-400': 0,  # [200, 400)
             '400-600': 0,
@@ -53,31 +53,39 @@ def food_intake_interval_analysis():
             'count': 0,
         }
 
+        ret = {
+            'count': 0, # 统计的总量
+            'data': [],
+        }
+
         for item in res:
             record_count = record_count + 1
             if item.food_intake < 200:
-                ret['0-200'] = ret['0-200'] + 1
+                intake_percent['0-200'] = intake_percent['0-200'] + 1
             elif item.food_intake < 400:
-                ret['200-400'] = ret['200-400'] + 1
+                intake_percent['200-400'] = intake_percent['200-400'] + 1
             elif item.food_intake < 600:
-                ret['400-600'] = ret['400-600'] + 1
+                intake_percent['400-600'] = intake_percent['400-600'] + 1
             elif item.food_intake < 800:
-                ret['600-800'] = ret['600-800'] + 1
+                intake_percent['600-800'] = intake_percent['600-800'] + 1
             elif item.food_intake < 1000:
-                ret['800-1000'] = ret['800-1000'] + 1
+                intake_percent['800-1000'] = intake_percent['800-1000'] + 1
             elif item.food_intake < 1200:
-                ret['1000-1200'] = ret['1000-1200'] + 1
+                intake_percent['1000-1200'] = intake_percent['1000-1200'] + 1
             elif item.food_intake < 1400:
-                ret['1200-1400'] = ret['1200-1400'] + 1
+                intake_percent['1200-1400'] = intake_percent['1200-1400'] + 1
             elif item.food_intake < 1600:
-                ret['1400-1600'] = ret['1400-1600'] + 1
+                intake_percent['1400-1600'] = intake_percent['1400-1600'] + 1
             else:
-                ret['>1600'] = ret['>1600'] + 1
+                intake_percent['>1600'] = intake_percent['>1600'] + 1
 
         if record_count != 0:
             # 计算百分数
-            for k in ret:
-                ret[k] = round(ret[k] / record_count, 2)
+            for k in intake_percent:
+                ret['data'].append({
+                    'intake': k,
+                    'frequency': round(intake_percent[k] / record_count, 2),
+                })
 
         ret['count'] = record_count
 
@@ -107,7 +115,7 @@ def weight_change():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        type = request_data.get('type')
+        r_type = request_data.get('type')
         pid = request_data.get('pid')
         stationid = request_data.get('stationId')
         start_date = transform_time(int(request_data.get('startTime')), '%Y%m%d')
@@ -119,7 +127,7 @@ def weight_change():
             'data': [],  # [ { 'date': '01-10', 'animalNum1': xx } ]
         }
 
-        if type == 'station':
+        if r_type == 'station':
             # 查询一个测定站里面的猪的体重变化
             res = db.session.query(PigList.earid, PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
                 .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
@@ -148,7 +156,7 @@ def weight_change():
 
                 ret['data'].append(temp_data)
         else:
-            # type == 'pig'
+            # r_type == 'pig'
             # 查询一头猪的体重变化
             res = db.session.query(PigList.earid, PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
                 .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
@@ -185,3 +193,63 @@ def weight_change():
         error_logger(e)
         error_logger(error_code['1005_0002'])
         return error_response(error_code['1005_0002'])
+
+
+@admin.route('/admin/graphanalyse/intake_frequency_in_day_interval/', methods=['GET'])
+def intake_frequency_in_day_interval():
+    '''
+    不同时段采食频率分布图
+    :param startTime: 开始时间（代表当天的时间戳 10 位）
+    :param endTime: 结束时间（代表当天的时间戳 10 位）
+    :param stationId: 测定站 id
+    :return:
+    '''
+    try:
+        request_data = request.args
+        param_checker = intake_frequency_in_day_interval_action(request_data)
+        if not param_checker['type']:
+            error_logger(param_checker['err_msg'])
+            return error_response(param_checker['err_msg'])
+
+        stationid = request_data.get('stationId')
+        start_date = request_data.get('startTime')
+        end_date = request_data.get('endTime')
+
+        ret = {
+            'count': 0,  # 统计的总量
+            'data': [],  # [ { 'date': '01-10', 'animalNum1': xx } ]
+        }
+
+        # 查询一个测定站里面的猪的体重变化
+        res = db.session.query(PigList.earid, PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
+            .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
+            .filter(PigList.stationid == stationid, PigDailyAssess.record_date >= start_date,
+                    PigDailyAssess.record_date <= end_date) \
+            .all()
+
+        date_weight_info = {}  # { '01-10': { 'animalNum1': xxx } }
+        for v in res:
+            date = v.record_date.strftime('%m-%d')
+            if date_weight_info.get(date):
+                date_weight_info[date][v.earid] = v.weight_ave
+            else:
+                date_weight_info[date] = {
+                    v.earid: v.weight_ave
+                }
+
+        for date in date_weight_info:
+            temp_data = {
+                'date': date,
+            }
+
+            for animalNum in date_weight_info[date]:
+                temp_data[animalNum] = date_weight_info[date][animalNum]
+
+            ret['data'].append(temp_data)
+
+        return success_response(ret)
+
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1005_0003'])
+        return error_response(error_code['1005_0003'])

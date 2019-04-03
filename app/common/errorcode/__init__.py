@@ -60,6 +60,7 @@ error_code = {
     # `app/admin/controller/graphanalyse
     '1005_0001': '1005_0001: 采食量区间数据处理失败',
     '1005_0002': '1005_0002: 体重变化数据处理失败',
+    '1005_0003': '1005_0003: 采食频率数据处理失败',
 
 
     # `app/common/memory/stationinfo`
