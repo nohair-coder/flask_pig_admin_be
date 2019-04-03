@@ -199,6 +199,7 @@ def weight_change():
 def intake_frequency_in_day_interval():
     '''
     不同时段采食频率分布图
+    :param type: 是选则的一个测定站还是所有的测定站 `all` `one`
     :param startTime: 开始时间（代表当天的时间戳 10 位）
     :param endTime: 结束时间（代表当天的时间戳 10 位）
     :param stationId: 测定站 id
@@ -211,41 +212,72 @@ def intake_frequency_in_day_interval():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
+        s_type = request_data.get('type')
         stationid = request_data.get('stationId')
-        start_date = request_data.get('startTime')
-        end_date = request_data.get('endTime')
+        start_time = request_data.get('startTime')
+        end_time = request_data.get('endTime')
 
         ret = {
             'count': 0,  # 统计的总量
             'data': [],  # [ { 'date': '01-10', 'animalNum1': xx } ]
         }
 
-        # 查询一个测定站里面的猪的体重变化
-        res = db.session.query(PigList.earid, PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
-            .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
-            .filter(PigList.stationid == stationid, PigDailyAssess.record_date >= start_date,
-                    PigDailyAssess.record_date <= end_date) \
-            .all()
+        if s_type == 'one':
+            # 查询一个测定站里面的猪的体重变化
+            res = db.session.query(PigList.id, PigBase.start_time) \
+                .outerjoin(PigBase, PigList.id == PigBase.pid) \
+                .filter(PigList.stationid == stationid, PigBase.start_time >= start_time,
+                        PigBase.start_time <= end_time) \
+                .all()
+        else:
+            # s_type == 'all' 查询所有测定站的数据
+            res = db.session.query(PigList.id, PigBase.start_time) \
+                .outerjoin(PigBase, PigList.id == PigBase.pid) \
+                .filter(PigBase.start_time >= start_time, PigBase.start_time <= end_time) \
+                .all()
 
-        date_weight_info = {}  # { '01-10': { 'animalNum1': xxx } }
+        time_interval_arr = [
+            '00:00-02:00',  # [0 , 2)  time_interval_arr[0]
+            '02:00-04:00',  # [2 , 4)
+            '04:00-06:00',
+            '06:00-08:00',
+            '08:00-10:00',
+            '10:00-12:00',
+            '12:00-14:00',
+            '14:00-16:00',
+            '16:00-18:00',
+            '18:00-20:00',
+            '20:00-22:00',
+            '22:00-24:00',
+        ]
+
+        record_inter_count = [0 for i in range(12)]  # 每个时间段的记录数
+
+        one_day_seconds = 86400
+        local_time_zone_add = 28800  # 8 * 3600
+        interval_seconds = 7200  # 2 * 3600
+
         for v in res:
-            date = v.record_date.strftime('%m-%d')
-            if date_weight_info.get(date):
-                date_weight_info[date][v.earid] = v.weight_ave
+            ret['count'] = ret['count'] + 1
+            inter = int((v.start_time + local_time_zone_add) % one_day_seconds / interval_seconds)  # 0 , 1, 2
+            record_inter_count[inter] = record_inter_count[inter] + 1
+            # print(' pid => {pid}, time => {time} '.format(pid=v.id, time=v.start_time))
+            # print('inter => {inter}'.format(inter=inter))
+
+        # 构建返回的数据
+        for k, v in enumerate(record_inter_count):
+            if ret['count'] != 0:
+                ret['data'].append({
+                    'interval': time_interval_arr[k],
+                    'count': v,
+                    'frequency': round(v / ret['count'], 2)
+                })
             else:
-                date_weight_info[date] = {
-                    v.earid: v.weight_ave
-                }
-
-        for date in date_weight_info:
-            temp_data = {
-                'date': date,
-            }
-
-            for animalNum in date_weight_info[date]:
-                temp_data[animalNum] = date_weight_info[date][animalNum]
-
-            ret['data'].append(temp_data)
+                ret['data'].append({
+                    'interval': time_interval_arr[k],
+                    'count': v,
+                    'frequency': 0
+                })
 
         return success_response(ret)
 

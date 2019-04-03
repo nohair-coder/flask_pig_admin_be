@@ -48,12 +48,18 @@ def weight_change_action(params):
 
 
 def intake_frequency_in_day_interval_action(params):
+    s_type = params.get('type')
     start_time = params.get('startTime')
     end_time = params.get('endTime')
     stationid = params.get('stationId')
 
-    if is_none(stationid) or not check_len(stationid, 12, 'le'):
-        return param_err(define_name['stationid'])
+
+    if not check_in(s_type, ('all', 'one')):
+        return param_err('查询类型错误（一个或者所有测定站）')
+
+    if s_type == 'one':
+        if is_none(stationid) or not check_len(stationid, 12, 'le'):
+            return param_err(define_name['stationid'])
 
     if is_none(start_time):
         return param_err('开始时间')

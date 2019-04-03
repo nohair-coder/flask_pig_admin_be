@@ -165,3 +165,84 @@ ret = {
     },
 }
 ```
+
+### `GET` /admin/graphanalyse/intake_frequency_in_day_interval/
+不同时段采食频率分布图
+__params__
+- `type` `string` `required` 是选择的一个测定站还是所有的测定站 `all` `one`
+- `stationId` `string` 测定站 id
+- `startTime` `string` `required` 起始时间 10 位数字时间戳
+- `endTime` `string` `required` 起始时间 10 位数字时间戳
+
+__return__
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+    data: {
+        "count": 138, // 在该总的时间段内的所有的记录数
+        "data": [
+            {
+                "count": 8, // 在 "00:00-02:00" 时间段内有记录的条数
+                "frequency": 0.06, // 分布的频率
+                "interval": "00:00-02:00" // 所属的时间段
+            },
+            {
+                "count": 12,
+                "frequency": 0.09,
+                "interval": "02:00-04:00"
+            },
+            {
+                "count": 10,
+                "frequency": 0.07,
+                "interval": "04:00-06:00"
+            },
+            {
+                "count": 16,
+                "frequency": 0.12,
+                "interval": "06:00-08:00"
+            },
+            {
+                "count": 21,
+                "frequency": 0.15,
+                "interval": "08:00-10:00"
+            },
+            {
+                "count": 14,
+                "frequency": 0.1,
+                "interval": "10:00-12:00"
+            },
+            {
+                "count": 15,
+                "frequency": 0.11,
+                "interval": "12:00-14:00"
+            },
+            {
+                "count": 14,
+                "frequency": 0.1,
+                "interval": "14:00-16:00"
+            },
+            {
+                "count": 12,
+                "frequency": 0.09,
+                "interval": "16:00-18:00"
+            },
+            {
+                "count": 5,
+                "frequency": 0.04,
+                "interval": "18:00-20:00"
+            },
+            {
+                "count": 8,
+                "frequency": 0.06,
+                "interval": "20:00-22:00"
+            },
+            {
+                "count": 3,
+                "frequency": 0.02,
+                "interval": "22:00-24:00"
+            }
+        ]
+    },
+}
+```
