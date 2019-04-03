@@ -73,3 +73,20 @@ def intake_frequency_in_day_interval_action(params):
         return param_err('结束时间')
 
     return dict(type=True)
+
+def daily_weight_gain_and_fcr_action(params):
+    stationid = params.get('stationId')
+    start_time = params.get('startTime')
+    end_time = params.get('endTime')
+
+
+    if is_none(stationid) or not check_len(stationid, 12, 'le'):
+        return param_err(define_name['stationid'])
+
+    if is_none(start_time):
+        return param_err('开始时间')
+
+    if is_none(end_time):
+        return param_err('结束时间')
+
+    return dict(type=True)

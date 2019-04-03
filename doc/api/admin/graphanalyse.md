@@ -267,3 +267,115 @@ ret = {
     },
 }
 ```
+
+
+### `GET` /admin/graphanalyse/food_intake_interval_analysis/
+
+日增重和饲料转化率统计（FCR）
+
+__params__
+- `stationId` `string` `required` 测定站 id
+- `startTime` `string` `required` 起始时间 10 位数字时间戳
+- `endTime` `string` `required` 起始时间 10 位数字时间戳
+
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+    data: [
+        {
+            "animalNum": "", // 种猪号
+            "dailyWeightGain": 0.2, // 日增重
+            "earId": "000009000402", // 耳标号
+            "fcr": 0.2, // 饲料转化率
+            "pid": 2 // 种猪 id
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": -0.13,
+            "earId": "000009000406",
+            "fcr": -0.13,
+            "pid": 3
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": -0.04,
+            "earId": "000009000427",
+            "fcr": -0.04,
+            "pid": 4
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0.13,
+            "earId": "000009000449",
+            "fcr": 0.13,
+            "pid": 5
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0.105,
+            "earId": "000009000420",
+            "fcr": 0.11,
+            "pid": 6
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": -1.72,
+            "earId": "000009000409",
+            "fcr": -1.72,
+            "pid": 7
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": -0.19,
+            "earId": "000009000425",
+            "fcr": -0.19,
+            "pid": 8
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": -0.13,
+            "earId": "000009000448",
+            "fcr": -0.13,
+            "pid": 9
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0.53,
+            "earId": "000009000413",
+            "fcr": 0.53,
+            "pid": 10
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0.575,
+            "earId": "000009000421",
+            "fcr": 0.58,
+            "pid": 11
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0.18,
+            "earId": "000009000407",
+            "fcr": 0.18,
+            "pid": 12
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0,
+            "earId": "000009000436",
+            "fcr": 0,
+            "pid": 13
+        },
+        {
+            "animalNum": "",
+            "dailyWeightGain": 0,
+            "earId": "000009000426",
+            "fcr": 0,
+            "pid": 14
+        }
+    ],
+}
+```

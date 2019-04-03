@@ -2,10 +2,12 @@
 '图表分析相关接口'
 
 from flask import request
+from sqlalchemy import asc
 
 from app import db
 from app.admin import admin
-from app.admin.logic.graphanalyse import food_intake_interval_analysis_action, weight_change_action, intake_frequency_in_day_interval_action
+from app.admin.logic.graphanalyse import food_intake_interval_analysis_action, weight_change_action, \
+    intake_frequency_in_day_interval_action, daily_weight_gain_and_fcr_action
 from app.common.errorcode import error_code
 from app.common.util import error_response, success_response, error_logger
 from app.common.util.time import transform_time
@@ -33,12 +35,12 @@ def food_intake_interval_analysis():
         start_time = request_data.get('startTime')
         end_time = request_data.get('endTime')
 
-
         if s_type == 'one':
             # 查询，时间都是用的 PigBase.start_time
             res = db.session.query(PigList.id, PigBase.food_intake) \
                 .outerjoin(PigBase, PigList.id == PigBase.pid) \
-                .filter(PigList.stationid == stationid, PigBase.start_time >= start_time, PigBase.start_time <= end_time) \
+                .filter(PigList.stationid == stationid, PigBase.start_time >= start_time,
+                        PigBase.start_time <= end_time) \
                 .all()
         else:
             # 查询所有测定站的数据
@@ -63,7 +65,7 @@ def food_intake_interval_analysis():
         }
 
         ret = {
-            'count': 0, # 统计的总量
+            'count': 0,  # 统计的总量
             'data': [],
         }
 
@@ -195,7 +197,6 @@ def weight_change():
 
                 ret['data'].append(temp_data)
 
-
         ret['earIdArr'] = list(earIdArr)
         return success_response(ret)
 
@@ -295,3 +296,83 @@ def intake_frequency_in_day_interval():
         error_logger(e)
         error_logger(error_code['1005_0003'])
         return error_response(error_code['1005_0003'])
+
+
+@admin.route('/admin/graphanalyse/daily_weight_gain_and_fcr/', methods=['GET'])
+def daily_weight_gain_and_fcr():
+    '''
+    日增重和饲料转化率统计（FCR）
+    :param startTime: 开始时间（代表当天的时间戳 10 位）
+    :param endTime: 结束时间（代表当天的时间戳 10 位）
+    :param stationId: 测定站 id
+    :return:
+    '''
+    try:
+        request_data = request.args
+        param_checker = daily_weight_gain_and_fcr_action(request_data)
+        if not param_checker['type']:
+            error_logger(param_checker['err_msg'])
+            return error_response(param_checker['err_msg'])
+
+        stationid = request_data.get('stationId')
+        start_date = transform_time(int(request_data.get('startTime')), '%Y%m%d')
+        end_date = transform_time(int(request_data.get('endTime')), '%Y%m%d')
+
+        ret = []
+
+        res = db.session.query(PigList.id, PigList.earid, PigList.animalnum, PigDailyAssess.food_intake_total,
+                               PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
+            .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
+            .filter(PigList.stationid == stationid, PigDailyAssess.record_date >= start_date,
+                    PigDailyAssess.record_date <= end_date) \
+            .order_by(asc(PigDailyAssess.record_date)) \
+            .all()
+
+        start_date_weight = {}  # 开始日期的体重 { pid: xxx } xxx 体重
+        end_date_weight = {}  # 结束日期的体重 { pid: xxx } xxx 体重
+        day_count = {}  # 统计的总天数 { pid: xxx } xxx 天数
+        period_food_intake_total = {}  # { pid: xxx } xxx 这段时间总的采食量
+        pig_info = {}  # { pid: { pid: xxx, earId: xxx, animalNum: xxx } }
+        pid_set = set()
+
+        for v in res:
+            if v.id in pid_set:
+                # 如果有该种猪的信息记录了
+                end_date_weight[v.id] = v.weight_ave
+            else:
+                # 如果没有该种猪的信息记录
+                pid_set.add(v.id)
+                pig_info[v.id] = {
+                    'pid': v.id,
+                    'earId': v.earid,
+                    'animalNum': v.animalnum,
+                }
+                start_date_weight[v.id] = v.weight_ave
+                end_date_weight[v.id] = v.weight_ave
+                day_count[v.id] = 0
+                period_food_intake_total[v.id] = 0
+            day_count[v.id] = day_count[v.id] + 1
+            period_food_intake_total[v.id] = period_food_intake_total[v.id] + 1
+
+        for pid in pid_set:
+            one_pig_all_info = {
+                'pid': pid,
+                'earId': pig_info[pid]['earId'],
+                'animalNum': pig_info[pid]['animalNum'],
+                'dailyWeightGain': round((end_date_weight[pid] - start_date_weight[pid]) / day_count[pid], 3),
+            }
+
+            if period_food_intake_total[pid] != 0:
+                one_pig_all_info['fcr'] = round(
+                    (end_date_weight[pid] - start_date_weight[pid]) / period_food_intake_total[pid], 2)
+            else:
+                one_pig_all_info['fcr'] = 0
+
+            ret.append(one_pig_all_info)
+
+        return success_response(ret)
+
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1005_0004'])
+        return error_response(error_code['1005_0004'])
