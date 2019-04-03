@@ -2,13 +2,16 @@
 
 ### `POST` /admin/login/sigup
 用户注册
+
 __params__
+
 - `username` `string` `required` 用户名 [1,30]
 - `password` `string` `required` 密码 [6,30]
 - `email` `string` `required` 邮箱
 - `phone` `string` `required` 手机号 11位
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -24,7 +27,9 @@ ret = {
 ```
 
 ### `POST` /admin/login/signin
+
 用户注册
+
 __params__
 - `username` `string` `required` 用户名 [1,30]
 - `password` `string` `required` 密码 [6,30]
@@ -46,11 +51,14 @@ ret = {
 
 ### `POST` /admin/login/forget_pass
 忘记密码，用邮箱激活新密码
+
 __params__
+
 - `email` `string` `required` 邮箱
 - `password` `string` `required` 新密码 [6,30]
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -59,12 +67,15 @@ ret = {
 ```
 
 ### `GET` /admin/login/forget_pass_confirm
+
 通过网页get请求激活新密码
 
 __params__
+
 - `code` `string` `required` 128 位校验码
 
 __return__
+
 ```js
 ret = 'html string' // 返回html字符串
 ```

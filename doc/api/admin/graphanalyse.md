@@ -1,14 +1,18 @@
 # admin/graphanalyse
 
 ### `GET` /admin/graphanalyse/food_intake_interval_analysis/
+
 采食量区间分析
+
 __params__
+
 - `type` `string` `required` 是选择的一个测定站还是所有的测定站 `all` `one`
 - `stationId` `string` 测定站 id
 - `startTime` `string` `required` 起始时间 10 位数字时间戳
 - `endTime` `string` `required` 起始时间 10 位数字时间戳
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -72,7 +76,9 @@ ret = {
 ```
 
 ### `GET` /admin/graphanalyse/weight_change/
+
 体重变化趋势图
+
 __params__
 - `type` `string` `required` 是显示一个测定站的数据还是显示一头猪的数据 `station` 查询一个测定站的所有猪的体重变化，`pig` 一头猪的体重变化
 - `stationId` `string` `required` 测定站 id，`type=station` 时
@@ -81,6 +87,7 @@ __params__
 - `endTime` `string` `required` 起始时间 10 位数字时间戳
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -178,7 +185,9 @@ ret = {
 ```
 
 ### `GET` /admin/graphanalyse/intake_frequency_in_day_interval/
+
 不同时段采食频率分布图
+
 __params__
 - `type` `string` `required` 是选择的一个测定站还是所有的测定站 `all` `one`
 - `stationId` `string` 测定站 id
@@ -186,6 +195,7 @@ __params__
 - `endTime` `string` `required` 起始时间 10 位数字时间戳
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false

@@ -2,11 +2,15 @@
 
 
 ### `GET` /admin/piglist/get_piglist_from_station/
+
 查询一栏里面的所有猪
+
 __params__
+
 - `stationId` `string` `required` 测定站号
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -26,14 +30,18 @@ ret = {
 ```
 
 ### `POST` /admin/piglist/entry_one/
+
 入栏一头猪（手动入栏的情况，必须输入符合规范的猪场代码、种猪号、耳标号、测定站号）
+
 __params__
+
 - `facNum` `string` `required`  猪场代码
 - `animalNum` `string` `required` 种猪号
 - `earId` `string` `required` 耳标号
 - `stationId` `string` `required` 测定站号
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -49,11 +57,15 @@ ret = {
 ```
 
 ### `PUT` /admin/piglist/exit_one/
+
 出栏一头猪，出栏不是删除一头猪，而是将该猪的出栏时间填充上即可
+
 __params__
+
 - `pid` `string` `required` 种猪 id(pig_list 的 id)
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -62,11 +74,15 @@ ret = {
 ```
 
 ### `PUT` /admin/piglist/exit_one_station/
+
 出栏一个测定站的所有猪
+
 __params__
+
 - `stationId` `string` `required` 测定站 id
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -75,14 +91,18 @@ ret = {
 ```
 
 ### `PUT` /admin/piglist/update_piginfo/
+
 出栏一个测定站的所有猪
+
 __params__
+
 - `pid` `string` `required` 种猪 id
 - `facNum` `string` `required` 猪场代码
 - `animalNum` `string` `required` 种猪号
 - `earId` `string` `required` 耳标号
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false

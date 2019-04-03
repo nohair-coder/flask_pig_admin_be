@@ -1,10 +1,13 @@
 # admin/syscfg
 
 ### `GET` /admin/syscfg/get_all_kvs
+获取数据库的所有配置信息
 __params__
+
 无
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -36,7 +39,9 @@ ret = {
 ```
 
 ### `PUT` /admin/syscfg/update_kv
+
 __params__
+
 - `name` `string` `required`
 - `value` `string` `required`
     - `FAC_NUM` -> 四位的字符串
@@ -45,6 +50,7 @@ __params__
     - `SHOW_TIME_SYNC` -> 'true' || 'false'
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false

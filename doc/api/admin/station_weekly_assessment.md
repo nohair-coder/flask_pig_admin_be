@@ -1,13 +1,17 @@
 # admin/station_weekly_assessment
 
 ### `GET` /admin/station_weekly_assessment_info/
+
 测定站周采食量统计
+
 __params__
+
 - `stationId` `string` `required` 测定站号
 - `startTime` `string` `required` 开始时间
 - `endTime` `string` `required` 结束时间
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false

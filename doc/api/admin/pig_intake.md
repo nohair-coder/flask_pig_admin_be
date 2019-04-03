@@ -1,13 +1,17 @@
 # admin/pig_intake
 
 ### `GET` /admin/pig_intake/intake_trend/
+
 个体采食量趋势图数据获取
+
 __params__
+
 - `pid` `string` `required` 种猪 id
 - `startTime` `string` `required` 起始时间 10 位数字时间戳
 - `endTime` `string` `required` 起始时间 10 位数字时间戳
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -30,12 +34,16 @@ ret = {
 ```
 
 ### `GET` /admin/pig_intake/total_perstation/
+
 测定站某日所有猪的采食总量的统计表
+
 __params__
+
 - `stationId` `string` `required` 测定站 id
 - `time` `string` `required` 日期（当天开始的时间戳 10 位）
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false

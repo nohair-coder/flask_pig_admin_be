@@ -1,8 +1,11 @@
 # admin/pigbase
 
 ### `POST` /admin/pigbase/
+
 添加一条测定站记录
+
 __params__
+
 - `earid` `string` `required` 耳标号
 - `stationid` `string` `required` 测定站id
 - `food_intake` `string` `required` 采食量
@@ -17,6 +20,7 @@ __params__
 - `end_time` `string` `required` 采食结束时间
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
@@ -32,8 +36,11 @@ demo
 
 
 ### `GET` /admin/pigbase/
+
 查询种猪基础数据信息
+
 __params__
+
 - `type` `string` `required` 类型 `all` `station` `one`
 - `fromId` `string` 起始查找的 id （不包括）
 - `earId` `string` 耳标号，`type='one'` 时，需要输入耳标号
@@ -42,6 +49,7 @@ __params__
 - `endTime` `string` 结束时间
 
 __return__
+
 ```js
 ret = {
     success: boolean,  // true || false
