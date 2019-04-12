@@ -54,9 +54,6 @@ def get_pig_abnormal_analyse_info():
         ret_data = []
         temp_ret_data = {}  # { earid: {xxx} }
 
-        # 构建一个这段日期的数组
-        print('日期数组', date_arr)
-
         for v in res:
             if temp_ret_data.get(v.earid):
                 # 内部已经有该耳标号的记录了，只需要把对应日期的数据填充进去
