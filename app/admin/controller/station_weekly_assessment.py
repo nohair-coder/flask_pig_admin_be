@@ -15,7 +15,7 @@ from app.models import PigList, PigDailyAssess
 @admin.route('/admin/station_weekly_assessment_info/', methods=['GET'])
 def get_station_weekly_assessment_info():
     '''
-    查询种猪的基础信息
+    测定站周采食统计
     :param stationId: 对应 station id
     :param startTime: 起始时间 10 位数字时间戳
     :param endTime: 起始时间 10 位数字时间戳

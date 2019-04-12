@@ -11,3 +11,4 @@ import app.admin.controller.pigbase
 import app.admin.controller.station_weekly_assessment
 import app.admin.controller.pig_intake
 import app.admin.controller.graphanalyse
+import app.admin.controller.pig_abnormal_analyse
