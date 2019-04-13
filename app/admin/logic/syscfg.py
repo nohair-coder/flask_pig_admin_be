@@ -4,7 +4,6 @@ from app.models.syscfg import cfg_allowed_values, cfg_keys
 
 def get_one_kv_action(params):
     name = params.get('name')
-    print(name)
     if name not in list(cfg_keys.keys()):
         return param_err('键名')
     return dict(type=True)
