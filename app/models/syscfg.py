@@ -6,10 +6,12 @@ from app import db
 # 配置对应的数据库键名
 cfg_keys = {
     'FAC_NUM': 'FAC_NUM', # 系统设置-猪场代码
+    'PIG_BASE_DATA_ALLOWED_FIELDS': 'PIG_BASE_DATA_ALLOWED_FIELDS',  # 基础数据页面允许选择显示的所有字段
+    'PIG_BASE_DATA_FIELDS': 'PIG_BASE_DATA_FIELDS',  # 基础数据页面允许显示的字段
     'SHOW_SELECT_LANGUAGE': 'SHOW_SELECT_LANGUAGE', # 系统设置-显示选择语言
     'SHOW_TIME_SYNC': 'SHOW_TIME_SYNC', # 系统设置-显示时间同步区域
-    'PIG_BASE_DATA_FIELDS': 'PIG_BASE_DATA_FIELDS', # 基础数据页面允许显示的字段
-    'PIG_BASE_DATA_ALLOWED_FIELDS': 'PIG_BASE_DATA_ALLOWED_FIELDS', # 基础数据页面允许选择显示的所有字段
+    'PIG_DAILY_INTAKE_START_TIME': 'PIG_DAILY_INTAKE_START_TIME',
+    'PIG_DAILY_ASSESS_LAST_TWO_DATE': 'PIG_DAILY_ASSESS_LAST_TWO_DATE',
 }
 
 # 部分配置允许的键值

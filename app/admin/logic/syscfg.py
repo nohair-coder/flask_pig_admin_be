@@ -2,6 +2,14 @@
 from app.common.util.input_checker import param_err, check_len, check_in, check_arr_all_in
 from app.models.syscfg import cfg_allowed_values, cfg_keys
 
+def get_one_kv_action(params):
+    name = params.get('name')
+    print(name)
+    if name not in list(cfg_keys.keys()):
+        return param_err('键名')
+    return dict(type=True)
+
+
 def update_kv_action(params):
     '''
     更改数据库的 kv 配置，处理之前的参数合格性校验

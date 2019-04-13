@@ -3,7 +3,7 @@
 
 from flask import request
 from app.admin import admin
-from app.admin.logic.syscfg import update_kv_action
+from app.admin.logic.syscfg import update_kv_action, get_one_kv_action
 from app.models.syscfg import SysCfg, cfg_keys
 from app.common.util import error_response, success_response, error_logger
 from app.common.errorcode import error_code
@@ -14,7 +14,7 @@ from app.common.memory.daily_intake_start_time import initialize_intake_start_ti
 @admin.route('/admin/syscfg/get_all_kvs/', methods=['GET'])
 def get_all_kvs():
     '''
-    获取数据库中的所有 kv 对
+    获取设置表所有 kv 对
     :return:
     '''
     try:
@@ -70,3 +70,28 @@ def update_kv():
         error_logger(e)
         error_logger(error_code['1000_8002'])
         return error_response(error_code['1000_8002'])
+
+
+@admin.route('/admin/syscfg/get_one_kv/', methods=['GET'])
+def get_one_kv():
+    '''
+    获取设置表指定的 kv 对
+    :return:
+    '''
+    try:
+        request_data = request.args
+        param_checker = get_one_kv_action(request_data)
+        if not param_checker['type']: return error_response(param_checker['err_msg'])
+        name = request_data.get('name', None)
+        r = SysCfg({
+            'name': name,
+        }).get_one()
+        return success_response({
+            'name': r.name,
+            'value': r.value,
+            'comment': r.comment,
+        })
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1000_8003'])
+        return error_response(error_code['1000_8003'])

@@ -38,6 +38,27 @@ ret = {
 }
 ```
 
+### `GET` /admin/syscfg/get_one_kv/
+获取设置的单个配置信息
+__params__
+
+- `name` `string` `required`
+
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+     // 请求成功
+    data: {
+        "comment": "基础数据页面允许显示的字段",
+        "name": "PIG_BASE_DATA_FIELDS",
+        "value": "earid,stationid,facnum,animalnum,food_intake,weight,start_time,end_time,duration"
+    },
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
 ### `PUT` /admin/syscfg/update_kv
 
 __params__
