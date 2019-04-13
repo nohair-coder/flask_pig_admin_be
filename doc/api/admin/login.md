@@ -1,6 +1,6 @@
 # admin/login
 
-### `POST` /admin/login/sigup
+### `POST` /admin/login/signup/
 用户注册
 
 __params__
@@ -26,7 +26,7 @@ ret = {
 }
 ```
 
-### `POST` /admin/login/signin
+### `POST` /admin/login/signin/
 
 用户注册
 
@@ -49,7 +49,7 @@ ret = {
 }
 ```
 
-### `POST` /admin/login/forget_pass
+### `POST` /admin/login/forget_pass/
 忘记密码，用邮箱激活新密码
 
 __params__

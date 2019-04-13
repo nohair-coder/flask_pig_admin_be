@@ -16,7 +16,7 @@ cfg_keys = {
 cfg_allowed_values = {
     'SHOW_SELECT_LANGUAGE': ('false', 'true'),
     'SHOW_TIME_SYNC': ('false', 'true'),
-    'PIG_BASE_DATA_ALLOWED_FIELDS': ("facnum", "earid", "animalnum", "stationid", "food_intake", "weight", "body_long", "body_width", "body_height", "body_temp", "env_temp", "env_humi", "start_time", "end_time", "sys_time"),
+    'PIG_BASE_DATA_ALLOWED_FIELDS': ("facnum", "earid", "animalnum", "stationid", "food_intake", "weight", "body_long", "body_width", "body_height", "body_temp", "env_temp", "env_humi", "start_time", "end_time", "sys_time", "duration"),
     # 中文释义
     'PIG_BASE_DATA_ALLOWED_FIELD_COMMENTS': {
         'facnum': '猪场代码',
@@ -33,7 +33,8 @@ cfg_allowed_values = {
         'env_humi': '环境湿度',
         'start_time': '开始时间',
         'end_time': '结束时间',
-        'duration': '持续时间'
+        "sys_time": '系统时间',
+        'duration': '持续时间',
     }
 }
 

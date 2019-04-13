@@ -25,7 +25,7 @@ def get_all_station():
             if r.status == 'off':
                 station_off.append({
                     'id': r.id, # 记录的 id
-                    'stationid': r.stationid.lstrip('0'), # 测定站 id
+                    'stationid': r.stationid, # 测定站 id
                     'comment': r.comment,
                     'status': r.status, # 测定站状态
                     'changetime': r.changetime, # 测定站状态修改时间
@@ -34,7 +34,7 @@ def get_all_station():
             elif r.status == 'on' and r.errorcode != '00000':
                 station_err.append({
                     'id': r.id, # 记录的 id
-                    'stationid': r.stationid.lstrip('0'), # 测定站 id
+                    'stationid': r.stationid, # 测定站 id
                     'comment': r.comment,
                     'status': r.status, # 测定站状态
                     'changetime': r.changetime, # 测定站状态修改时间
@@ -43,7 +43,7 @@ def get_all_station():
             else:
                 station_on.append({
                     'id': r.id, # 记录的 id
-                    'stationid': r.stationid.lstrip('0'), # 测定站 id
+                    'stationid': r.stationid, # 测定站 id
                     'comment': r.comment,
                     'status': r.status, # 测定站状态
                     'changetime': r.changetime, # 测定站状态修改时间

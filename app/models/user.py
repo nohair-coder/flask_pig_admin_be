@@ -78,5 +78,12 @@ class User(db.Model):
         '''
         return User.query.filter_by(email=self.email).first()
 
+    def get_from_token(self):
+        '''
+        依据 token 寻找到对应的记录
+        :return:
+        '''
+        return User.query.filter_by(token=self.token).first()
+
     def __repr__(self):
         return '<User %r>' % self.username
