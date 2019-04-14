@@ -18,13 +18,13 @@ ret = {
     data: {
         "data": [
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0, // 在当天没有数组则会被自动给填充为 0 
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1311,
                     "prev_foodintake_compare": -346,
                     "prev_weight_compare": 0.68,
@@ -34,13 +34,13 @@ ret = {
                 "earId": "000009000401"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1569,
                     "prev_foodintake_compare": 244,
                     "prev_weight_compare": 0.63,
@@ -50,13 +50,13 @@ ret = {
                 "earId": "000009000402"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 1123,
                     "prev_foodintake_compare": -8206,
                     "prev_weight_compare": 0.43,
                     "weight_ave": 48.48
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 828,
                     "prev_foodintake_compare": -295,
                     "prev_weight_compare": 0.17,
@@ -66,13 +66,13 @@ ret = {
                 "earId": "000009000406"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1356,
                     "prev_foodintake_compare": 58,
                     "prev_weight_compare": 0.23,
@@ -82,13 +82,13 @@ ret = {
                 "earId": "000009000427"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1509,
                     "prev_foodintake_compare": 219,
                     "prev_weight_compare": 0.86,
@@ -98,13 +98,13 @@ ret = {
                 "earId": "000009000449"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 2046,
                     "prev_foodintake_compare": 438,
                     "prev_weight_compare": 0.65,
@@ -114,13 +114,13 @@ ret = {
                 "earId": "000009000420"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1754,
                     "prev_foodintake_compare": 568,
                     "prev_weight_compare": 0.84,
@@ -130,13 +130,13 @@ ret = {
                 "earId": "000009000409"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 1252,
                     "prev_foodintake_compare": -8843,
                     "prev_weight_compare": 1.82,
                     "weight_ave": 45.16
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1574,
                     "prev_foodintake_compare": 322,
                     "prev_weight_compare": 0.31,
@@ -146,13 +146,13 @@ ret = {
                 "earId": "000009000425"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1284,
                     "prev_foodintake_compare": -344,
                     "prev_weight_compare": 0.47,
@@ -162,13 +162,13 @@ ret = {
                 "earId": "000009000448"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1985,
                     "prev_foodintake_compare": 151,
                     "prev_weight_compare": 1.38,
@@ -178,13 +178,13 @@ ret = {
                 "earId": "000009000413"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 2286,
                     "prev_foodintake_compare": 779,
                     "prev_weight_compare": 0.46,
@@ -194,13 +194,13 @@ ret = {
                 "earId": "000009000421"
             },
             {
-                "0325": {
+                "03-25": {
                     "food_intake_total": 0,
                     "prev_foodintake_compare": 0,
                     "prev_weight_compare": 0,
                     "weight_ave": 0
                 },
-                "0326": {
+                "03-26": {
                     "food_intake_total": 1981,
                     "prev_foodintake_compare": 275,
                     "prev_weight_compare": 0.89,
@@ -212,8 +212,8 @@ ret = {
         ],
         // 记录所在的日期构成的数组
         "dateArr": [
-            "0325",
-            "0326"
+            "03-25",
+            "03-26"
         ]
     },
 }

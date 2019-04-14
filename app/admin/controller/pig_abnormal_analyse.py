@@ -50,14 +50,14 @@ def get_pig_abnormal_analyse_info():
             # [{ animalnum, earid, '02-19': { food_intake_total, prev_foodintake_compare, weight_ave, prev_weight_compare }, ...  },]
         }
 
-        date_arr = get_date_intervals(start_time, end_time)  # ['02-19', '02-20', '02-21']
+        date_arr = get_date_intervals(start_time, end_time, fm='%m-%d')  # ['02-19', '02-20', '02-21']
         ret_data = []
         temp_ret_data = {}  # { earid: {xxx} }
 
         for v in res:
             if temp_ret_data.get(v.earid):
                 # 内部已经有该耳标号的记录了，只需要把对应日期的数据填充进去
-                temp_ret_data[v.earid][v.record_date.strftime('%m%d')] = {
+                temp_ret_data[v.earid][v.record_date.strftime('%m-%d')] = {
                     'food_intake_total': v.food_intake_total,
                     'prev_foodintake_compare': v.prev_foodintake_compare,
                     'weight_ave': v.weight_ave,
@@ -68,7 +68,7 @@ def get_pig_abnormal_analyse_info():
                 temp_ret_data[v.earid] = {
                     'animalNum': v.animalnum,
                     'earId': v.earid,
-                    v.record_date.strftime('%m%d'): {
+                    v.record_date.strftime('%m-%d'): {
                         'food_intake_total': v.food_intake_total,
                         'prev_foodintake_compare': v.prev_foodintake_compare,
                         'weight_ave': v.weight_ave,

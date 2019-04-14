@@ -1,5 +1,5 @@
 # coding: utf8
-'测定站周采食量统计'
+'个体采食量趋势图、采食总量'
 
 from flask import request
 
@@ -48,7 +48,7 @@ def intake_trend():
 
         for item in res:
             ret['data'].append({
-                'date': item.record_date.strftime('%Y-%m-%d'),
+                'date': item.record_date.strftime('%m-%d'),
                 'intake_total': item.food_intake_total,
             })
             ret['total'] = ret['total'] + item.food_intake_total
