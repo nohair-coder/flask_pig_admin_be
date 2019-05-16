@@ -2,6 +2,8 @@
 '测定站信息表'
 
 from app import db
+from app.models.stationerrorcodereference import StationErrorcodeReference
+
 
 class StationInfo(db.Model):
     '''
@@ -29,7 +31,12 @@ class StationInfo(db.Model):
         查询所有的测定站列表
         :return:
         '''
-        return StationInfo.query.all()
+        return db.session \
+            .query(StationInfo.id, StationInfo.stationid, StationInfo.comment, StationInfo.status, StationInfo.changetime,
+                   StationInfo.errorcode,
+                   StationErrorcodeReference.comment.label('reason')) \
+            .outerjoin(StationErrorcodeReference, StationInfo.errorcode == StationErrorcodeReference.errorcode)\
+            .all()
 
     def add_one(self):
         '''

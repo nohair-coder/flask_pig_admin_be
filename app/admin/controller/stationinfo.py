@@ -30,16 +30,30 @@ def get_all_station():
                     'status': r.status, # 测定站状态
                     'changetime': r.changetime, # 测定站状态修改时间
                     'errorcode': r.errorcode, # 错误码
+                    'reason': r.reason, # 状态描述
                 })
             elif r.status == 'on' and r.errorcode != '00000':
-                station_err.append({
-                    'id': r.id, # 记录的 id
-                    'stationid': r.stationid, # 测定站 id
-                    'comment': r.comment,
-                    'status': r.status, # 测定站状态
-                    'changetime': r.changetime, # 测定站状态修改时间
-                    'errorcode': r.errorcode, # 错误码
-                })
+                # 数据库对这个故障码没有对应的记录，则显示故障码并提示
+                if not r.reason:
+                    station_err.append({
+                        'id': r.id,  # 记录的 id
+                        'stationid': r.stationid,  # 测定站 id
+                        'comment': r.comment,
+                        'status': r.status,  # 测定站状态
+                        'changetime': r.changetime,  # 测定站状态修改时间
+                        'errorcode': r.errorcode,  # 错误码
+                        'reason': str(r.errorcode) + '，无故障描述',  # 状态描述
+                    })
+                else:
+                    station_err.append({
+                        'id': r.id, # 记录的 id
+                        'stationid': r.stationid, # 测定站 id
+                        'comment': r.comment,
+                        'status': r.status, # 测定站状态
+                        'changetime': r.changetime, # 测定站状态修改时间
+                        'errorcode': r.errorcode, # 错误码
+                        'reason': r.reason, # 状态描述
+                    })
             else:
                 station_on.append({
                     'id': r.id, # 记录的 id
@@ -48,6 +62,7 @@ def get_all_station():
                     'status': r.status, # 测定站状态
                     'changetime': r.changetime, # 测定站状态修改时间
                     'errorcode': r.errorcode, # 错误码
+                    'reason': r.reason, # 状态描述
                 })
 
         ret = station_off + station_err + station_on
