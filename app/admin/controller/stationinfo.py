@@ -16,6 +16,11 @@ def get_all_station():
     获取所有测定站信息
     :return:
     '''
+    request_data = request.args
+    # 将off状态的放在首部
+    errFirst = request_data.get('errFirst') == 'true'
+    print(errFirst)
+
     try:
         res = StationInfo().get_all_station()
         station_off = [] # off 状态的排在前面
@@ -65,7 +70,11 @@ def get_all_station():
                     'reason': r.reason, # 状态描述
                 })
 
-        ret = station_off + station_err + station_on
+        if errFirst:
+            ret = station_off + station_err + station_on
+        else:
+            ret = station_on + station_off + station_err
+
         return success_response(ret)
 
     except Exception as e:

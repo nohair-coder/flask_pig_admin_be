@@ -6,7 +6,7 @@
 
 __params__
 
-无
+- `errFirst` `string` 将 off、或者有故障的测定站放在首部
 
 __return__
 
