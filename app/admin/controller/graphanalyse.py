@@ -362,9 +362,11 @@ def daily_weight_gain_and_fcr():
                 'dailyWeightGain': round((end_date_weight[pid] - start_date_weight[pid]) / day_count[pid], 3),
             }
 
-            if period_food_intake_total[pid] != 0:
+            if (end_date_weight[pid] - start_date_weight[pid]) != 0:
+                print(period_food_intake_total[pid], end_date_weight[pid] - start_date_weight[pid], round(
+                    period_food_intake_total[pid] / (end_date_weight[pid] - start_date_weight[pid]), 2))
                 one_pig_all_info['fcr'] = round(
-                    (end_date_weight[pid] - start_date_weight[pid]) / period_food_intake_total[pid], 2)
+                    period_food_intake_total[pid] / (end_date_weight[pid] - start_date_weight[pid]), 2)
             else:
                 one_pig_all_info['fcr'] = 0
 
