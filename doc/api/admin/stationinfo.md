@@ -21,6 +21,7 @@ ret = {
             comment: String || null, // 字符串或者 null
             errorcode: String, // 5位数字 
             status: "off", // on || off
+            reason: String, // 故障描述
         }, // ...
     ],
     err_msg: string, // 操作失败的时候，返回的错误信息
