@@ -269,7 +269,7 @@ ret = {
 ```
 
 
-### `GET` /admin/graphanalyse/food_intake_interval_analysis/
+### `GET` /admin/graphanalyse/daily_weight_gain_and_fcr/
 
 日增重和饲料转化率统计（FCR）
 
