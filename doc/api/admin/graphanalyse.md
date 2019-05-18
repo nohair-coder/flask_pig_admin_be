@@ -65,11 +65,6 @@ ret = {
                 "frequency": 0,
                 "intake": ">1600"
             },
-            {
-                "count": 0,
-                "frequency": 0,
-                "intake": "count"
-            }
         ]
     },
 }
