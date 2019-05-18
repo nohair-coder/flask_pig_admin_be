@@ -61,7 +61,6 @@ def food_intake_interval_analysis():
             '1200-1400': 0,
             '1400-1600': 0,
             '>1600': 0,
-            'count': 0,
         }
 
         ret = {
