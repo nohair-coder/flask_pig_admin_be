@@ -72,11 +72,14 @@ class PigBase(db.Model):
         if from_id != None:
             return db.session \
                 .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
-                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp,
+                       PigBase.env_humi,
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
-                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid,
+                       PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time),
+                             PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
@@ -105,7 +108,6 @@ class PigBase(db.Model):
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 
-
     def get_from_one_pig(self, *, earid, from_id, from_time, end_time):
         '''
         获取某头种猪的历史信息
@@ -113,12 +115,16 @@ class PigBase(db.Model):
         '''
         if from_id != None:
             return db.session \
-                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
-                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight,
+                       PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp,
+                       PigBase.env_temp, PigBase.env_humi,
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.earid.__eq__(earid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(
+                and_(PigList.earid.__eq__(earid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time),
+                     PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
@@ -131,7 +137,8 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.earid.__eq__(earid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.earid.__eq__(earid), PigBase.start_time.__ge__(from_time),
+                             PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 
@@ -142,12 +149,16 @@ class PigBase(db.Model):
         '''
         if from_id != None:
             return db.session \
-                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight, PigBase.body_long,
-                       PigBase.body_width, PigBase.body_height, PigBase.body_temp, PigBase.env_temp, PigBase.env_humi,
+                .query(PigBase.id, PigBase.pid, PigBase.food_intake, PigBase.weight,
+                       PigBase.body_long,
+                       PigBase.body_width, PigBase.body_height, PigBase.body_temp,
+                       PigBase.env_temp, PigBase.env_humi,
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
-                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
+                       PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid,
+                       PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.id.__lt__(from_id), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.id.__lt__(from_id),
+                             PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
         else:
@@ -160,7 +171,8 @@ class PigBase(db.Model):
                        PigBase.start_time, PigBase.end_time, PigBase.sys_time,
                        PigList.facnum, PigList.animalnum, PigList.earid, PigList.stationid, PigList.entry_time) \
                 .outerjoin(PigList, PigList.id == PigBase.pid) \
-                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.start_time.__ge__(from_time), PigBase.start_time.__le__(end_time))) \
+                .filter(and_(PigList.stationid.__eq__(stationid), PigBase.start_time.__ge__(from_time),
+                             PigBase.start_time.__le__(end_time))) \
                 .order_by(desc(PigBase.start_time), desc(PigBase.id)) \
                 .limit(length_per_page + 1)
 

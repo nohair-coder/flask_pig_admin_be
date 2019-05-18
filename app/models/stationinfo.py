@@ -32,10 +32,11 @@ class StationInfo(db.Model):
         :return:
         '''
         return db.session \
-            .query(StationInfo.id, StationInfo.stationid, StationInfo.comment, StationInfo.status, StationInfo.changetime,
+            .query(StationInfo.id, StationInfo.stationid, StationInfo.comment, StationInfo.status,
+                   StationInfo.changetime,
                    StationInfo.errorcode,
                    StationErrorcodeReference.comment.label('reason')) \
-            .outerjoin(StationErrorcodeReference, StationInfo.errorcode == StationErrorcodeReference.errorcode)\
+            .outerjoin(StationErrorcodeReference, StationInfo.errorcode == StationErrorcodeReference.errorcode) \
             .all()
 
     def add_one(self):

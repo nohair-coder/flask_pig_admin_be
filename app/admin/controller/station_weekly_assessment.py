@@ -4,6 +4,8 @@
 from flask import request
 
 from app import db
+from time import localtime, strftime
+from datetime import timedelta
 from app.admin import admin
 from app.admin.logic.station_weekly_assessment import get_station_weekly_assessment_info_action
 from app.common.errorcode import error_code
@@ -29,8 +31,10 @@ def get_station_weekly_assessment_info():
             return error_response(param_checker['err_msg'])
 
         stationid = request_data.get('stationId')
-        start_date = transform_time(int(request_data.get('startTime')), '%Y%m%d')
-        end_date = transform_time(int(request_data.get('endTime')), '%Y%m%d')
+        start_time = int(request_data.get('startTime'))
+        end_time = int(request_data.get('endTime'))
+        start_date = transform_time(start_time, '%Y%m%d')
+        end_date = transform_time(end_time, '%Y%m%d')
 
         # 并表查询
         res = db.session.query(PigList.id, PigList.facnum, PigList.animalnum, PigList.earid,
@@ -42,13 +46,13 @@ def get_station_weekly_assessment_info():
 
         # 日期转换
         date_transformer = {
-            str(int(start_date) + 0): 'day1',
-            str(int(start_date) + 1): 'day2',
-            str(int(start_date) + 2): 'day3',
-            str(int(start_date) + 3): 'day4',
-            str(int(start_date) + 4): 'day5',
-            str(int(start_date) + 5): 'day6',
-            str(int(start_date) + 6): 'day7',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=0).total_seconds())): 'day1',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=1).total_seconds())): 'day2',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=2).total_seconds())): 'day3',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=3).total_seconds())): 'day4',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=4).total_seconds())): 'day5',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=5).total_seconds())): 'day6',
+            strftime('%Y%m%d', localtime(start_time + timedelta(days=6).total_seconds())): 'day7',
         }
 
         ret = []

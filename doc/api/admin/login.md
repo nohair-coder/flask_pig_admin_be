@@ -28,7 +28,7 @@ ret = {
 
 ### `POST` /admin/login/signin/
 
-用户注册
+用户登录
 
 __params__
 - `username` `string` `required` 用户名 [1,30]

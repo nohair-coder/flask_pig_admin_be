@@ -19,7 +19,6 @@ def get_all_station():
     request_data = request.args
     # 将off状态的放在首部
     errFirst = request_data.get('errFirst') == 'true'
-    print(errFirst)
 
     try:
         res = StationInfo().get_all_station()
