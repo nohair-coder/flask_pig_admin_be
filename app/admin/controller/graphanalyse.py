@@ -162,8 +162,8 @@ def weight_change():
                     'date': date,
                 }
 
-                for animalNum in date_weight_info[date]:
-                    temp_data[animalNum] = date_weight_info[date][animalNum]
+                for earid in date_weight_info[date]:
+                    temp_data[earid] = date_weight_info[date][earid]
 
                 ret['data'].append(temp_data)
         else:
@@ -196,6 +196,7 @@ def weight_change():
 
                 ret['data'].append(temp_data)
 
+        ret['data'].sort(key=lambda x: x.get('date'))
         ret['earIdArr'] = list(earIdArr)
         return success_response(ret)
 
