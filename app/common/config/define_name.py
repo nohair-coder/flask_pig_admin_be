@@ -2,6 +2,7 @@
 '中文命名'
 
 define_name = dict(
+    pid='测定编号',
     facnum='猪场代码',
     animalnum='种猪号',
     earid='耳标号',

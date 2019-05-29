@@ -45,6 +45,7 @@ def get_piglist_from_station():
                 'stationId': r.stationid,
                 'entryTime': r.entry_time,
                 'exitTime': r.exit_time,
+                'recordId': r.record_id,
             })
 
         return success_response(ret)
@@ -58,10 +59,6 @@ def get_piglist_from_station():
 def entry_one():
     '''
     入栏一头猪
-    :param facNum: 猪场代码
-    :param animalNum: 种猪号
-    :param earId: 耳标号
-    :param stationId: 测定站号
     :return:
     '''
     try:
@@ -71,16 +68,17 @@ def entry_one():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        facnum = request_data.get('facNum')
+        pid = request_data.get('pid')
         animalnum = request_data.get('animalNum')
         earid = request_data.get('earId')
         stationid = request_data.get('stationId')
         entry_time = get_now_timestamp()
 
         pig_data = {
-            'facnum': facnum,
+            'id': pid,
             'stationid': stationid,
             'animalnum': animalnum,
+            'facnum': '',
             'earid': earid,
             'entry_time': entry_time,
         }
@@ -110,10 +108,10 @@ def exit_one():
             error_logger(param_checker['err_msg'])
             return error_response(param_checker['err_msg'])
 
-        pid = request_data.get('pid')
+        record_id = request_data.get('recordId')
 
         PigList({
-            'id': pid,
+            'record_id': record_id,
             'exit_time': get_now_timestamp(),
         }).exit_one()
 
@@ -159,10 +157,6 @@ def exit_one_station():
 def update_piginfo():
     '''
     修改一头种猪的信息，不包括出栏
-    :param pid: 种猪 id
-    :param facNum: 猪场代码
-    :param animalNum: 种猪号
-    :param earId: 耳标号
     :return:
     '''
     try:
@@ -174,13 +168,13 @@ def update_piginfo():
         # 不需要修改测定站 id，后面猪进食的时候，系统会自动将猪所属哪个测定站作比对，确定是否进行修正（换栏智能处理）
         #------------------------------------------------
         pid = request_data.get('pid')
-        facnum = request_data.get('facNum')
+        record_id = request_data.get('recordId')
         animalnum = request_data.get('animalNum')
         earid = request_data.get('earId')
 
         PigList({
             'id': pid,
-            'facnum': facnum,
+            'record_id': record_id,
             'animalnum': animalnum,
             'earid': earid,
         }).update_piginfo()

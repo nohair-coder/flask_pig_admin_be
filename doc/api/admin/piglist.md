@@ -24,6 +24,7 @@ ret = {
             "stationId": "xxxdddeeedbn", // 测定站号
             "entryTime": 1551856710, // 入栏时间
             "exitTime": null, // 出栏时间
+            "recordId": '0000000000000001', // 记录的 id
         }, // ...
     ],
 }
@@ -35,7 +36,7 @@ ret = {
 
 __params__
 
-- `facNum` `string` `required`  猪场代码
+- `pid` `string` `required` 测定编号
 - `animalNum` `string` `required` 种猪号
 - `earId` `string` `required` 耳标号
 - `stationId` `string` `required` 测定站号
@@ -47,7 +48,7 @@ ret = {
     success: boolean,  // true || false
     err_msg: string, // 操作失败的时候，返回的错误信息
     data: {
-        "facnum": "icbc", // 猪场代码
+        "pid": "111", // 测定编号
         "earid": "earidxxxaxx1", // 耳标号
         "animalnum": "animalnum000", // 种猪号
         "stationid": "000000012545", // 测定站号
@@ -62,7 +63,7 @@ ret = {
 
 __params__
 
-- `pid` `string` `required` 种猪 id(pig_list 的 id)
+- `recordId` `string` `required` 记录 id
 
 __return__
 
@@ -96,8 +97,8 @@ ret = {
 
 __params__
 
-- `pid` `string` `required` 种猪 id
-- `facNum` `string` `required` 猪场代码
+- `pid` `string` `required` 种猪测定编号
+- `recordId` `string` `required` 记录 id
 - `animalNum` `string` `required` 种猪号
 - `earId` `string` `required` 耳标号
 

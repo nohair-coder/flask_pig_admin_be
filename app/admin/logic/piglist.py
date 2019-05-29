@@ -28,32 +28,25 @@ def entry_one_action(params):
     :param params:
     :return:
     '''
-    facnum = params.get('facNum')
+    pid = params.get('pid')
     animalnum = params.get('animalNum')
     earid = params.get('earId')
     stationid = params.get('stationId')
 
-    if is_none(facnum) or not check_len(facnum, 4, 'eq'):
-        return param_err(define_name['facnum'])
-    if not facnum_exist(facnum):
-        return dict(type=False, err_msg=define_name['facnum'] + '不存在')
+    if is_none(pid) or not check_len(pid, 15, 'le'):
+        return param_err(define_name['pid'])
 
     if is_none(stationid):
         return param_err(define_name['station'])
     if not stationid_exist(stationid):
         return dict(type=False, err_msg=define_name['stationid'] + '不存在')
 
-    if is_none(animalnum) or not check_len(animalnum, 12, 'eq'):
+    if is_none(animalnum) or not check_len(animalnum, 15, 'le'):
         return param_err(define_name['animalnum'])
-    # 检测种猪号是否已经存在
-    if animalnum_exist(animalnum):
-        return dict(type=False, err_msg=define_name['animalnum'] + '已经存在')
 
-    if is_none(earid) or not check_len(earid, 12, 'eq'):
+    if is_none(earid) or not check_len(earid, 12, 'le'):
         return param_err(define_name['earid'])
-    # 检测耳标号是否已经存在
-    if earid_exist(earid):
-        return dict(type=False, err_msg=define_name['earid'] + '已经存在')
+
 
     return dict(type=True)
 
@@ -64,10 +57,10 @@ def exit_one_action(params):
     :param params:
     :return:
     '''
-    pid = params.get('pid')
+    record_id = params.get('recordId')
 
-    if is_none(pid):
-        return param_err('种猪id')
+    if is_none(record_id):
+        return param_err('记录 id')
 
     return dict(type=True)
 
@@ -95,25 +88,17 @@ def update_piginfo_action(params):
     :return:
     '''
     pid = params.get('pid')
-    facnum = params.get('facNum')
+    recordId = params.get('recordId')
     animalnum = params.get('animalNum')
     earid = params.get('earId')
 
-    if is_none(pid):
-        return param_err('种猪id')
+    if is_none(pid) or not check_len(pid, 15, 'le'):
+        return param_err(define_name['pid'])
 
-    if is_none(facnum) or not check_len(facnum, 4, 'eq'):
-        return param_err(define_name['facnum'])
-    if not facnum_exist(facnum):
-        return dict(type=False, err_msg=define_name['facnum'] + '不存在')
-
-    if is_none(animalnum) or not check_len(animalnum, 12, 'eq'):
+    if is_none(animalnum) or not check_len(animalnum, 15, 'le'):
         return param_err(define_name['animalnum'])
-    # 检测种猪号是否已经存在
-    if animalnum_exist(animalnum):
-        return dict(type=False, err_msg=define_name['animalnum'] + '已经存在')
 
-    if is_none(earid) or not check_len(earid, 12, 'eq'):
+    if is_none(earid) or not check_len(earid, 12, 'le'):
         return param_err(define_name['earid'])
     # 检测耳标号是否已经存在
     # if earid_exist(earid):

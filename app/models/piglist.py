@@ -11,14 +11,15 @@ class PigList(db.Model):
     '''
     __tablename__ = 'pig_list'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.String(15))
     facnum = db.Column(db.String(4))  # 猪场代码
-    animalnum = db.Column(db.String(12))  # 种猪号（对种猪的自定义代指）
+    animalnum = db.Column(db.String(15))  # 种猪号（对种猪的自定义代指）
     earid = db.Column(db.String(12))  # 耳标号 id
     stationid = db.Column(db.String(12))
 
     entry_time = db.Column(db.Integer)  # 入栏时间
     exit_time = db.Column(db.Integer)  # 出栏时间（只有出栏的猪才会有这个时间）
+    record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 记录的 id
 
     def __init__(self, params = None):
         if params:
@@ -29,6 +30,7 @@ class PigList(db.Model):
             self.stationid = params.get('stationid')
             self.entry_time = params.get('entry_time')
             self.exit_time = params.get('exit_time')
+            self.record_id = params.get('record_id')
 
     def get_all(self):
         '''
@@ -64,7 +66,7 @@ class PigList(db.Model):
         一个种猪出栏
         :return:
         '''
-        PigList.query.filter_by(id=self.id).update({
+        PigList.query.filter_by(record_id=self.record_id).update({
             'exit_time': self.exit_time,
         })
         db.session.commit()
@@ -86,8 +88,8 @@ class PigList(db.Model):
         更改一头猪的信息
         :return:
         '''
-        PigList.query.filter_by(id=self.id).update({
-            'facnum': self.facnum,
+        PigList.query.filter_by(record_id=self.record_id).update({
+            'id': self.id,
             'animalnum': self.animalnum,
             'earid': self.earid,
         })
