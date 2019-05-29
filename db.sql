@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost:8889
--- 生成日期： 2019-04-12 03:44:45
+-- 生成日期： 2019-05-29 05:05:28
 -- 服务器版本： 5.7.23
 -- PHP 版本： 7.2.10
 
@@ -169,7 +169,7 @@ CREATE TABLE `pig_base` (
   `start_time` int(10) NOT NULL DEFAULT '0' COMMENT '开始采食时间',
   `end_time` int(10) DEFAULT '0' COMMENT '结束进食时间',
   `sys_time` int(10) DEFAULT '0' COMMENT '服务器本地时间'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='种猪信息表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='种猪基础信息表';
 
 --
 -- 转存表中的数据 `pig_base`
@@ -3723,9 +3723,9 @@ CREATE TABLE `pig_list` (
 --
 
 INSERT INTO `pig_list` (`id`, `facnum`, `animalnum`, `earid`, `stationid`, `entry_time`, `exit_time`) VALUES
-(1, '', '', '000009000401', '000000000009', 1553072599, NULL),
-(2, '', '', '000009000402', '000000000009', 1553072838, NULL),
-(3, '', '', '000009000406', '000000000009', 1553073048, NULL),
+(1, 'hzau', '999999000401', '000009000401', '000000000009', 1553072599, NULL),
+(2, 'hzau', '999999000402', '000009000402', '000000000009', 1553072838, NULL),
+(3, 'hzau', '999999000406', '000009000406', '000000000009', 1553073048, NULL),
 (4, '', '', '000009000427', '000000000009', 1553073161, NULL),
 (5, '', '', '000009000449', '000000000009', 1553073877, NULL),
 (6, '', '', '000009000420', '000000000009', 1553074082, NULL),
@@ -3739,7 +3739,17 @@ INSERT INTO `pig_list` (`id`, `facnum`, `animalnum`, `earid`, `stationid`, `entr
 (14, '', '', '000009000426', '000000000009', 1553076389, NULL),
 (15, '', '', '999999999999', '000000000005', 1553149384, NULL),
 (16, '', '', '000009999009', '000000000009', 1553327803, NULL),
-(17, '', '', '00-727380959', '000000000009', 1553417658, NULL);
+(17, '', '', '00-727380959', '000000000009', 1553417658, NULL),
+(18, 'hzau', '000000000444', '000000000444', '000000000009', 1555146229, 1555162347),
+(19, 'hzau', '000000000222', '000000000222', '000000000009', 1555146360, 1555162423),
+(20, 'hzau', '000000000333', '000000000333', '000000000009', 1555146698, 1555162456),
+(21, 'hzau', '000000000888', '000000000888', '000000000255', 1555162698, 1555163177),
+(22, 'hzau', '000000000999', '000000000999', '000000000255', 1555162723, 1555163177),
+(23, 'hzau', '000000000777', '000000000777', '000000000255', 1555162727, 1555163177),
+(24, 'hzau', '000000000666', '000000000666', '000000000255', 1555162733, 1555163177),
+(25, 'hzau', '000009000998', '000009000998', '000000000009', 1558461983, 1558461995),
+(26, 'hzau', '900000000011', '900000000011', '000000000255', 1558462190, 1558682358),
+(27, 'hzau', '999990000111', '999990000111', '000000000255', 1558695108, 1558695227);
 
 -- --------------------------------------------------------
 
@@ -3759,7 +3769,7 @@ CREATE TABLE `station_errorcode_reference` (
 
 INSERT INTO `station_errorcode_reference` (`id`, `errorcode`, `comment`) VALUES
 (1, '00000', '机器正常运行或者已停机'),
-(3, '00002', '部件2故障'),
+(3, '00001', '1号部件出现重大故障'),
 (5, '00005', '部件5故障'),
 (7, '00004', '部件4故障'),
 (8, '00003', '部件3故障'),
@@ -3767,7 +3777,8 @@ INSERT INTO `station_errorcode_reference` (`id`, `errorcode`, `comment`) VALUES
 (10, '00008', '部件8故障'),
 (14, '00009', '部件9故障'),
 (15, '00010', '部件10故障'),
-(17, '00011', 'dsadsa');
+(19, '00099', '99号传感器出现故障'),
+(20, '00100', '100号传感器出现故障');
 
 -- --------------------------------------------------------
 
@@ -3798,7 +3809,7 @@ INSERT INTO `station_info` (`id`, `stationid`, `comment`, `status`, `changetime`
 (7, '000000000005', '', 'on', 1553834764, '00000'),
 (8, '000000000006', '', 'on', 1553834764, '00000'),
 (9, '000000000007', '', 'on', 1553834764, '00000'),
-(10, '000000000008', '', 'on', 1553834764, '00000');
+(10, '000000000008', '', 'on', 1553834764, '00099');
 
 -- --------------------------------------------------------
 
@@ -3832,9 +3843,9 @@ CREATE TABLE `syscfg` (
 --
 
 INSERT INTO `syscfg` (`name`, `comment`, `value`, `created_time`) VALUES
-('FAC_NUM', '系统设置-猪场代码', 'icbc', 0),
-('PIG_BASE_DATA_ALLOWED_FIELDS', '基础数据页面允许选择显示的所有字段', 'earid,animalnum,stationid,food_intake,weight,body_long,body_width,body_height,body_temp,env_temp,env_humi,start_time,end_time,sys_time', 0),
-('PIG_BASE_DATA_FIELDS', '基础数据页面允许显示的字段', 'earid,stationid,facnum', 0),
+('FAC_NUM', '系统设置-猪场代码', 'hzau', 0),
+('PIG_BASE_DATA_ALLOWED_FIELDS', '基础数据页面允许选择显示的所有字段', 'earid,animalnum,stationid,food_intake,weight,body_long,body_width,body_height,body_temp,env_temp,env_humi,start_time,end_time,sys_time,duration', 0),
+('PIG_BASE_DATA_FIELDS', '基础数据页面允许显示的字段', 'earid,food_intake,animalnum,end_time,duration,stationid,start_time', 0),
 ('SHOW_SELECT_LANGUAGE', '系统设置-显示选择语言', 'false', 0),
 ('SHOW_TIME_SYNC', '系统设置-显示时间同步区域', 'false', 0),
 ('PIG_DAILY_INTAKE_START_TIME', '日采食开始计算的时间，测定站第二日首次采食数据统计，四位数字（2位小时2位分钟）（0800 点整）', '0800', 0),
@@ -3863,10 +3874,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `token`, `phone`, `email`, `rank`, `created_time`, `last_login_time`) VALUES
-(1, 'lxfriday', '9a6f6b5aa85c259f683441ed17e1862558e88e33ddd17ec12d5b75cad733d9a4', 'daskdnasbjfkabdfjksdbfkjbdkf', '18627825090', 'lxfriday@126.com', 'common', 0, 0),
-(2, 'root', '9a6f6b5aa85c259f683441ed17e1862558e88e33ddd17ec12d5b75cad733d9a4', 'nfjdfnjkdsnfldjsbnfljksbdflkjbdsfjbs', '15623401867', '3248184446@qq.com', 'super', 0, 0),
-(3, 'lxfriday001', '9a6f6b5aa85c259f683441ed17e1862558e88e33ddd17ec12d5b75cad733d9a4', 'cf9f5d2c50ab6710785528ba97504da4f4e15084fb00bb50b34775fe9dc9f665', '15623401868', 'liu3248184446@outlook.com', 'common', 1551678859, 1551680861),
-(4, 'lxfriday002', '0d7890f1bfb827c8f7f45057f5ab32f88f573ade592b16c15c0e29dc7851b2da', '3b44c07dd4a5183241834b76c531130de2704c7897833c96fe0c201bd044bf86', '15623401869', '3248184447@outlook.com', 'common', 1551686197, 1551686197);
+(7, 'lxfriday', '9a6f6b5aa85c259f683441ed17e1862558e88e33ddd17ec12d5b75cad733d9a4', 'bbf5531ac09974c36e4165c10db98e92fc821f78e7a70854e237f9fad005bd40', '15623401867', '3248184446@qq.com', 'common', 1556328197, 1557824068),
+(6, 'root', '0d7890f1bfb827c8f7f45057f5ab32f88f573ade592b16c15c0e29dc7851b2da', '946e0f4228641bc2fb2c60e7eef7c5610934dd73abb3b840b5513701565b44a7', '18627825090', 'liu3248184446@outlook.com', 'super', 1555127195, 1558694826);
 
 -- --------------------------------------------------------
 
@@ -3936,9 +3945,7 @@ ALTER TABLE `station_errorcode_reference`
 -- 表的索引 `station_info`
 --
 ALTER TABLE `station_info`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `stationid` (`stationid`),
-  ADD KEY `stationid_2` (`stationid`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `station_timer`
@@ -4008,13 +4015,13 @@ ALTER TABLE `pig_daily_first_intake`
 -- 使用表AUTO_INCREMENT `pig_list`
 --
 ALTER TABLE `pig_list`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- 使用表AUTO_INCREMENT `station_errorcode_reference`
 --
 ALTER TABLE `station_errorcode_reference`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- 使用表AUTO_INCREMENT `station_info`
@@ -4032,10 +4039,10 @@ ALTER TABLE `station_timer`
 -- 使用表AUTO_INCREMENT `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `user_find_pass`
 --
 ALTER TABLE `user_find_pass`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;

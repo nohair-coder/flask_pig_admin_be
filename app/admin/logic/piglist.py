@@ -116,7 +116,7 @@ def update_piginfo_action(params):
     if is_none(earid) or not check_len(earid, 12, 'eq'):
         return param_err(define_name['earid'])
     # 检测耳标号是否已经存在
-    if earid_exist(earid):
-        return dict(type=False, err_msg=define_name['earid'] + '已经存在')
+    # if earid_exist(earid):
+    #     return dict(type=False, err_msg=define_name['earid'] + '已经存在')
 
     return dict(type=True)
