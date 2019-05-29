@@ -226,8 +226,6 @@ def get_pig_base_info():
         elif type == 'one':
             # 'one'
             pid = request_data.get('pid')
-            print('pid', pid)
-            print('bool(pid)', bool(pid))
             if bool(pid):
                 res = PigBase().get_from_one_pig(pid=pid, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
