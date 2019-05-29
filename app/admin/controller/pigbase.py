@@ -191,7 +191,7 @@ def get_pig_base_info():
     查询种猪的基础信息
     :param type: all、station、one
     :param fromId: 初始的 id
-    :param earId: 对应 pig
+    :param pid: 测定编号 type = 'one'
     :param stationId: 对应 station id
     :param fromTime: 起始时间 10 位数字时间戳
     :param endTime: 起始时间 10 位数字时间戳
@@ -225,11 +225,13 @@ def get_pig_base_info():
 
         elif type == 'one':
             # 'one'
-            earid = request_data.get('earId')
-            if bool(earid):
-                res = PigBase().get_from_one_pig(earid=earid, from_id=from_id, from_time=from_time, end_time=end_time)
+            pid = request_data.get('pid')
+            print('pid', pid)
+            print('bool(pid)', bool(pid))
+            if bool(pid):
+                res = PigBase().get_from_one_pig(pid=pid, from_id=from_id, from_time=from_time, end_time=end_time)
             else:
-                return error_response('缺少耳标号')
+                return error_response('缺少测定编号')
 
         else:
             # all

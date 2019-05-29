@@ -43,7 +43,7 @@ __params__
 
 - `type` `string` `required` 类型 `s` `station` `one`
 - `fromId` `string` 起始查找的 id （不包括）
-- `earId` `string` 耳标号，`type='one'` 时，需要输入耳标号
+- `pid` `string` `type='one'` 时，需要输入测定编号
 - `stationId` `string` 测定站号，`type='station'` 时，需要输入测定站号
 - `fromTime` `string` 起始时间（10位时间戳）
 - `endTime` `string` 结束时间（10位时间戳）

@@ -18,9 +18,10 @@ cfg_keys = {
 cfg_allowed_values = {
     'SHOW_SELECT_LANGUAGE': ('false', 'true'),
     'SHOW_TIME_SYNC': ('false', 'true'),
-    'PIG_BASE_DATA_ALLOWED_FIELDS': ("facnum", "earid", "animalnum", "stationid", "food_intake", "weight", "body_long", "body_width", "body_height", "body_temp", "env_temp", "env_humi", "start_time", "end_time", "sys_time", "duration"),
+    'PIG_BASE_DATA_ALLOWED_FIELDS': ("facnum", "earid", "animalnum", "stationid", "pid", "food_intake", "weight", "body_long", "body_width", "body_height", "body_temp", "env_temp", "env_humi", "start_time", "end_time", "sys_time", "duration"),
     # 中文释义
     'PIG_BASE_DATA_ALLOWED_FIELD_COMMENTS': {
+        'pid': '测定编号',
         'facnum': '猪场代码',
         'earid': '耳标号',
         'animalnum': '种猪号',
