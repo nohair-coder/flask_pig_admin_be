@@ -85,7 +85,7 @@ def total_perstation():
         date = transform_time(int(request_data.get('time')), '%Y%m%d')
 
         # 查询
-        res = db.session.query(PigList.earid, PigList.animalnum, PigList.facnum, PigDailyAssess.food_intake_total) \
+        res = db.session.query(PigList.id, PigList.earid, PigList.animalnum, PigList.facnum, PigDailyAssess.food_intake_total) \
             .outerjoin(PigDailyAssess, PigList.id == PigDailyAssess.pid) \
             .filter(PigList.stationid == stationid, PigDailyAssess.record_date == date) \
             .all()
@@ -100,6 +100,7 @@ def total_perstation():
 
         for item in res:
             ret['data'].append({
+                'id': item.id,
                 'facNum': item.facnum,
                 'earId': item.earid,
                 'animalNum': item.animalnum,

@@ -52,12 +52,14 @@ ret = {
         "ave": 7.21, // 均值
         "data": [
             {
+                "id": 1, // 测定编号
                 "animalNum": "", // 种猪号
                 "earId": "sss0sa01254s", // 耳标号
                 "facNum": "", // 猪场代码
                 "intake": 7.55 // 当日采食量
             },
             {
+                "id": 2, // 测定编号
                 "animalNum": "00000001254s",
                 "earId": "00000001254s",
                 "facNum": "icbc",
