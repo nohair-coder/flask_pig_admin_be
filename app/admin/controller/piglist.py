@@ -83,11 +83,18 @@ def entry_one():
             'entry_time': entry_time,
         }
 
-        PigList(pig_data).entry_one()
+        # 防止破坏数据库存储规范，未出栏的种猪不允许使用相同的测定编号或者耳标号
+        exist_info = PigList(pig_data).can_pig_entry()
 
-        initialize_piglist_async()
+        if not exist_info['exist']:
 
-        return success_response(pig_data)
+            PigList(pig_data).entry_one()
+
+            initialize_piglist_async()
+
+            return success_response(pig_data)
+        else:
+            return error_response(exist_info['msg'])
 
     except Exception as e:
         error_logger(e)
@@ -172,16 +179,25 @@ def update_piginfo():
         animalnum = request_data.get('animalNum')
         earid = request_data.get('earId')
 
-        PigList({
+        pig_data = {
             'id': pid,
             'record_id': record_id,
             'animalnum': animalnum,
             'earid': earid,
-        }).update_piginfo()
+        }
 
-        initialize_piglist_async()
+        # 防止破坏数据库存储规范，未出栏的种猪不允许使用相同的测定编号或者耳标号
+        exist_info = PigList(pig_data).can_update_piginfo()
 
-        return success_response()
+        if not exist_info['exist']:
+
+            PigList(pig_data).update_piginfo()
+
+            initialize_piglist_async()
+
+            return success_response()
+        else:
+            return error_response(exist_info['msg'])
 
     except Exception as e:
         error_logger(e)

@@ -52,9 +52,71 @@ class PigList(db.Model):
         else:
             return PigList.query.filter_by(stationid=self.stationid).all()
 
+    def can_pig_entry(self):
+        '''
+        检测种猪是否能入站
+        入栏前需要先做测定编号和耳标号检测
+        :return:
+        '''
+        # 未出栏的种猪是否有使用相同的测定编号的
+        pid_exist = PigList.query.filter(
+            and_(PigList.id.__eq__(self.id), PigList.exit_time.is_(None))
+        ).count() > 0
+        # 未出栏的种猪是否有使用相同的耳标号的
+        earid_exist = PigList.query.filter(
+            and_(PigList.earid.__eq__(self.earid), PigList.exit_time.is_(None))
+        ).count() > 0
+
+        if pid_exist:
+            return {
+                'exist': True,
+                'msg': '测定编号正在使用'
+            }
+        elif earid_exist:
+            return {
+                'exist': True,
+                'msg': '耳标号正在使用'
+            }
+        else:
+            return {
+                'exist': False,
+            }
+
+    def can_update_piginfo(self):
+        '''
+        检测新修改的种猪信息能否更改
+        入栏前需要先做测定编号和耳标号检测
+        :return:
+        '''
+        # 未出栏的种猪是否有使用相同的测定编号的
+        # 找不是自己的这条记录
+        pid_exist = PigList.query.filter(
+            and_(PigList.id.__eq__(self.id), PigList.record_id.__ne__(self.record_id), PigList.exit_time.is_(None))
+        ).count() > 0
+        # 未出栏的种猪是否有使用相同的耳标号的
+        earid_exist = PigList.query.filter(
+            and_(PigList.earid.__eq__(self.earid), PigList.record_id.__ne__(self.record_id), PigList.exit_time.is_(None))
+        ).count() > 0
+
+        if pid_exist:
+            return {
+                'exist': True,
+                'msg': '测定编号正在使用'
+            }
+        elif earid_exist:
+            return {
+                'exist': True,
+                'msg': '耳标号正在使用'
+            }
+        else:
+            return {
+                'exist': False,
+            }
+
     def entry_one(self):
         '''
         一个种猪入栏
+        入栏需要先做测定编号和耳标号检测
         :return:
         '''
         db.session.add(self)
