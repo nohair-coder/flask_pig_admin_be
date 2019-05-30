@@ -125,60 +125,61 @@ def pig_intake_once():
             # 将当前记录归入日评估
             daily_assess(pid=pid, sys_time=sys_time, intake=food_intake, weight=weight)
             # 检查是否更换了测定站
-            if stationid != pig_identity_info.get('stationid'):
-                PigList({
-                    'id': pid,
-                    'stationid': stationid,
-                }).update_stationid()
-                initialize_piglist_async()
-        else:
-            # 1、新增种猪记录
-            # 2、刷新内存数据
-            # 3、获取到 pid，将基础数据写入
-            new_piglist_record = PigList({
-                'facnum': '',  # 系统自动生成的记录，不分配 facnum
-                'stationid': stationid,
-                'animalnum': '',  # 系统自动生成的记录，不分配种猪号
-                'earid': earid,
-                'entry_time': get_now_timestamp(),
-            }).entry_one()
-            new_pigbase_record = PigBase({
-                'pid': new_piglist_record.id,
-                'food_intake': food_intake,
-                'weight': weight,
-                'body_long': body_long,
-                'body_width': body_width,
-                'body_height': body_height,
-                'body_temp': body_temp,
-                'env_temp': env_temp,
-                'env_humi': env_humi,
-                'start_time': start_time,
-                'end_time': end_time,
-                'sys_time': sys_time,
-            }).add_one()
-            # 今日首次采食判断处理
-            today_first_intook_proc(sys_time=sys_time, pid=new_piglist_record.id, pigbase_id=new_pigbase_record.id)
-            # 将当前记录归入日评估
-            daily_assess(pid=new_piglist_record.id, sys_time=sys_time, intake=food_intake, weight=weight)
-
-            initialize_piglist_async()
+            # if stationid != pig_identity_info.get('stationid'):
+            #     PigList({
+            #         'id': pid,
+            #         'stationid': stationid,
+            #     }).update_stationid()
+            #     initialize_piglist_async()
+        # else:
+        #     # 1、新增种猪记录
+        #     # 2、刷新内存数据
+        #     # 3、获取到 pid，将基础数据写入
+        #     new_piglist_record = PigList({
+        #         'facnum': '',  # 系统自动生成的记录，不分配 facnum
+        #         'stationid': stationid,
+        #         'animalnum': '',  # 系统自动生成的记录，不分配种猪号
+        #         'earid': earid,
+        #         'entry_time': get_now_timestamp(),
+        #     }).entry_one()
+        #     new_pigbase_record = PigBase({
+        #         'pid': new_piglist_record.id,
+        #         'food_intake': food_intake,
+        #         'weight': weight,
+        #         'body_long': body_long,
+        #         'body_width': body_width,
+        #         'body_height': body_height,
+        #         'body_temp': body_temp,
+        #         'env_temp': env_temp,
+        #         'env_humi': env_humi,
+        #         'start_time': start_time,
+        #         'end_time': end_time,
+        #         'sys_time': sys_time,
+        #     }).add_one()
+        #     # 今日首次采食判断处理
+        #     today_first_intook_proc(sys_time=sys_time, pid=new_piglist_record.id, pigbase_id=new_pigbase_record.id)
+        #     # 将当前记录归入日评估
+        #     daily_assess(pid=new_piglist_record.id, sys_time=sys_time, intake=food_intake, weight=weight)
+        #
+        #     initialize_piglist_async()
 
         # ------------------- 智能测定站转换 -------------------
         # 如果测定站不存在，说明种猪被投放到了一个新的测定站
-        # 需要新创建一个测定站
-        if not stationid_exist(stationid):
-            # 1、先创建测定站
-            StationInfo({
-                'stationid': stationid,
-                'comment': '测定站号自动生成，生成时间 ' + get_now_time('%Y年%m月%d日 -- %H:%M:%S'),
-                'status': 'on',
-                'changetime': get_now_timestamp(),
-                'errorcode': '00000',
-            }).add_one()
-            # 刷新内存中的测定站数据
-            initialize_station_list_async()
-
-        return success_response()
+        # # 需要新创建一个测定站
+        # if not stationid_exist(stationid):
+        #     # 1、先创建测定站
+        #     StationInfo({
+        #         'stationid': stationid,
+        #         'comment': '测定站号自动生成，生成时间 ' + get_now_time('%Y年%m月%d日 -- %H:%M:%S'),
+        #         'status': 'on',
+        #         'changetime': get_now_timestamp(),
+        #         'errorcode': '00000',
+        #     }).add_one()
+        #     # 刷新内存中的测定站数据
+        #     initialize_station_list_async()
+            return success_response()
+        else:
+            return error_response('种猪未入栏（耳标未在系统注册）')
 
     except Exception as e:
         error_logger(e)
@@ -268,6 +269,7 @@ def get_pig_base_info():
             ret['lastId'] = ret['list'][-1:][0].get('id')  # 获取最后一条记录的 id， 在下一次
         else:
             ret['lastId'] = 0
+        print(ret)
         return success_response(ret)
 
     except Exception as e:

@@ -16,7 +16,7 @@ class PigBase(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    pid = db.Column(db.Integer)  # 种猪id, 对应到 pig_list 的id
+    pid = db.Column(db.String(15))  # 种猪id, 对应到 pig_list 的id
     food_intake = db.Column(db.Float())  # 进食量（料重）
     weight = db.Column(db.Float())  # 猪体重
     body_long = db.Column(db.Float())  # 体长
