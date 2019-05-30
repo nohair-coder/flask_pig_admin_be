@@ -269,7 +269,6 @@ def get_pig_base_info():
             ret['lastId'] = ret['list'][-1:][0].get('id')  # 获取最后一条记录的 id， 在下一次
         else:
             ret['lastId'] = 0
-        print(ret)
         return success_response(ret)
 
     except Exception as e:

@@ -138,6 +138,8 @@ def weight_change():
             'data': [],  # [ { 'date': '01-10', 'animalNum1': xx } ]
         }
 
+        print(pid)
+
         if r_type == 'station':
             # 查询一个测定站里面的猪的体重变化
             res = db.session.query(PigList.earid, PigDailyAssess.weight_ave, PigDailyAssess.record_date) \
