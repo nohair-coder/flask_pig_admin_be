@@ -52,7 +52,7 @@ def initialize_daily_first_intake_record(ts=get_now_timestamp()):
         for r in res:
             daily_first_intake_record['pids'].add(r.pid)
 
-        print(__name__, daily_first_intake_record)
+        # print(__name__, daily_first_intake_record)
         print('initialize_daily_first_intake_record 日首次采食数据载入内存成功')
     except Exception as e:
         error_logger(e)

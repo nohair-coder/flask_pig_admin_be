@@ -112,6 +112,7 @@ serverSendQueue=queue.Queue()
 def CANCommunication():
     'CAN模块，阻塞型'
     try:
+        print('before init')
         CAN_Analysis.sysInit()
         print("sys init")
         CANSocketThread=threading.Thread(target=CANSocket)
