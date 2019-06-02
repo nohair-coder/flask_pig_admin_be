@@ -3,7 +3,7 @@ import time, queue, json, threading
 from app.CAN import UsrCAN, HttpHandle
 
 USE_EXTENDED_FRAME = False
-FUN_CODE_BIT = 8
+FUN_CODE_BIT = 7
 FUN_CODE_DICT = {  # 远程帧时的功能码
     'heart_beat': 0,
     'data_object_request': 1,
@@ -30,7 +30,7 @@ def getFunctionCode(msg):
 
 def getNodeID(msg):
     '获取节点'
-    return msg.arbitration_id & 0xff
+    return msg.arbitration_id & 0x7f
 
 
 def syncTime(msg):

@@ -72,7 +72,7 @@ def initialize_pig_daily_assess_record():
                 }
                 pig_daily_assess_record[pid]['prev'] = prev
 
-        # print(__name__, pig_daily_assess_record)
+        print(__name__, pig_daily_assess_record)
         print('initialize_pig_daily_assess_record 种猪一日信息数据载入内存成功')
     except Exception as e:
         error_logger(e)
@@ -138,7 +138,6 @@ def has_recent_record(pid):
     '''
     record = pig_daily_assess_record.get(pid)
     return record.get('recent') != None
-
 
 def add_today_record(pid, *, record_date, food_intake_count, food_intake_total, weight_ave, prev_weight_compare,
                      prev_foodintake_compare):
