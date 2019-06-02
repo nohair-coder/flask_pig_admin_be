@@ -21,12 +21,12 @@ from app.config import length_per_page
 
 
 @asyncFunc
-def today_first_intook_proc(*, sys_time, pid, pigbase_id):
+def today_first_intook_proc(*, start_time, pid, pigbase_id):
     '''
     判断本次采食是否是当天 intake_start_time 时间之后的首次采食
     如果是则存入 首次采食数据表，并刷新
     否则忽略
-    :param sys_time: 10 位的时间戳
+    :param start_time: 10 位的时间戳
     :param pid: 种猪 id
     :param pigbase_id: 对应的 pigbase 表的记录 id
     :return:
@@ -36,12 +36,12 @@ def today_first_intook_proc(*, sys_time, pid, pigbase_id):
     # 3、相等的则再判断 pid 是否已经存在，已经存在则不处理，不存在则添加到数据库，同时更新到内存
     try:
 
-        transformed_time = transform_time(sys_time, '%Y%m%d')
+        transformed_time = transform_time(start_time, '%Y%m%d')
 
-        if is_after_intake_start_time(sys_time):
+        if is_after_intake_start_time(start_time):
             # 如果内存中的记录已经过期，则 reset_record
-            if is_record_outdated(sys_time):
-                reset_record(sys_time)
+            if is_record_outdated(start_time):
+                reset_record(start_time)
             # 如果该猪当天没有采食
             if not has_pig_today_intook(pid):
                 PigDailyFirstIntake({
@@ -56,17 +56,17 @@ def today_first_intook_proc(*, sys_time, pid, pigbase_id):
         error_logger(error_code['1002_0002'])
 
 
-def daily_assess(*, pid, intake, weight, sys_time):
+def daily_assess(*, pid, intake, weight, start_time):
     '''
     日评估，每次采食都会归入到该评估中
     :param pid:
     :param intake:
     :param weight:
-    :param sys_time:
+    :param start_time:
     :return:
     '''
     # 将采食记录归入日采食记录
-    calc_today_intake(pid, intake=intake, weight=weight, intake_date=transform_time(sys_time, '%Y%m%d'))
+    calc_today_intake(pid, intake=intake, weight=weight, intake_date=transform_time(start_time, '%Y%m%d'))
 
 
 @admin.route('/admin/pigbase/', methods=['POST'])
@@ -121,9 +121,9 @@ def pig_intake_once():
                 'sys_time': sys_time,
             }).add_one()
             # 今日首次采食判断处理
-            today_first_intook_proc(sys_time=sys_time, pid=pid, pigbase_id=new_pigbase_record.id)
+            # today_first_intook_proc(start_time=start_time, pid=pid, pigbase_id=new_pigbase_record.id)
             # 将当前记录归入日评估
-            daily_assess(pid=pid, sys_time=sys_time, intake=food_intake, weight=weight)
+            daily_assess(pid=pid, start_time=start_time, intake=food_intake, weight=weight)
             # 检查是否更换了测定站
             # if stationid != pig_identity_info.get('stationid'):
             #     PigList({
@@ -159,7 +159,7 @@ def pig_intake_once():
         #     # 今日首次采食判断处理
         #     today_first_intook_proc(sys_time=sys_time, pid=new_piglist_record.id, pigbase_id=new_pigbase_record.id)
         #     # 将当前记录归入日评估
-        #     daily_assess(pid=new_piglist_record.id, sys_time=sys_time, intake=food_intake, weight=weight)
+        #     daily_assess(pid=new_piglist_record.id, start_time=start_time, intake=food_intake, weight=weight)
         #
         #     initialize_piglist_async()
 
