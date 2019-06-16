@@ -10,16 +10,16 @@ def CANSocket() :
     global socket_server,CANaddr
     socket_server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    s.connect(('8.8.8.8', 80))
-    print('socket_server.getsockname()', socket_server.getsockname())
+    # s.connect(('8.8.8.8', 80))
+    # print('socket_server.getsockname()', socket_server.getsockname())
 
     host = socket.gethostname()
     ip = socket.gethostbyname(host)
     port = 40001
     print('localhost:', host, ip)
 
-    print('sock   address      ---->', (s.getsockname()[0], port))
-    socket_server.bind((s.getsockname()[0], port))
+    # print('sock   address      ---->', (s.getsockname()[0], port))
+    socket_server.bind(('192.168.1.104', port))
     s.close()
     data,CANaddr = socket_server.recvfrom(1024)
     print('CAN connected',data,CANaddr)

@@ -8,7 +8,7 @@ from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
 from app.common.memory.stationlist import initialize_station_list_async, stationid_exist
 from app.common.errorcode import error_code
-# from app.CAN.Raspi_CAN import setDeviceStatus
+from app.CAN.Raspi_CAN import setDeviceStatus
 
 
 @admin.route('/admin/stationinfo/', methods=['GET'])
@@ -199,7 +199,7 @@ def set_station():
 
             print(setting_pairs)
 
-            # setDeviceStatus(setting_pairs)
+            setDeviceStatus(setting_pairs)
             return success_response()
         else:
             return error_response('需要指定测定站和状态')
