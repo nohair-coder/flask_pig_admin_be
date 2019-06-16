@@ -8,6 +8,7 @@ from app.models import StationInfo
 from app.common.util import error_response, success_response, error_logger, get_now_timestamp
 from app.common.memory.stationlist import initialize_station_list_async, stationid_exist
 from app.common.errorcode import error_code
+# from app.CAN.Raspi_CAN import setDeviceStatus
 
 
 @admin.route('/admin/stationinfo/', methods=['GET'])
@@ -183,3 +184,26 @@ def update_station():
         error_logger(e)
         error_logger(error_code['1000_5004'])
         return error_response(error_code['1000_5004'])
+
+@admin.route('/admin/stationinfo/set_station', methods=['PUT'])
+def set_station():
+    '''
+    设定测定站的开关机状态
+    :return:
+    '''
+    try:
+        request_data = request.json
+        # [['000000000010', 'open_device'], ['000000000011', 'close_device']]
+        setting_pairs = request_data.get('settingPairs') # [[stationid, status]] status => close_device or open_device
+        if len(setting_pairs) > 0:
+
+            print(setting_pairs)
+
+            # setDeviceStatus(setting_pairs)
+            return success_response()
+        else:
+            return error_response('需要指定测定站和状态')
+    except Exception as e:
+        error_logger(e)
+        error_logger(error_code['1000_5005'])
+        return error_response(error_code['1000_5005'])

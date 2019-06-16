@@ -1,3 +1,4 @@
+# coding: utf8
 import socket, time, threading, struct
 from app.CAN import UsrCAN, CAN_Analysis
 

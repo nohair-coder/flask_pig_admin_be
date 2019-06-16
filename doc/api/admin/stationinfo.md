@@ -66,7 +66,7 @@ ret = {
 
 ### `PUT` /admin/stationinfo
 
-添加一条测定站记录
+更改一个测定站的记录信息
 
 __params__
 
@@ -74,6 +74,23 @@ __params__
 - `comment` `string`  50个字符以内的备注
 - `status` `string` `on` `off`
 - `errorcode` `string` 5位的故障码 
+
+__return__
+
+```js
+ret = {
+    success: boolean,  // true || false
+    err_msg: string, // 操作失败的时候，返回的错误信息
+}
+```
+
+
+### `PUT` /admin/stationinfo/set_station
+设定测定站的开关机状态
+
+__params__
+
+- `settingPairs` `array` `required` 类似 [['000000000010', 'open_device'], ['000000000011', 'close_device']]
 
 __return__
 

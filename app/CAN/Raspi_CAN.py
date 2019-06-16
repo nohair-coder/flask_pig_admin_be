@@ -1,18 +1,26 @@
-import queue, os, json, socket, time, threading, struct
+# coding: utf8
+import queue, socket, time, threading, pickle
 from app.CAN import UsrCAN, CAN_Analysis, HttpHandle
 from app.common.util import asyncFunc
 exit_flag = False
-dog_cnt=0
+timer_cnt=0
 
 def CANSocket() :
     'CAN Socket 初始化'
     global socket_server,CANaddr
     socket_server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 80))
+    print('socket_server.getsockname()', socket_server.getsockname())
+
     host = socket.gethostname()
     ip = socket.gethostbyname(host)
     port = 40001
-    print('localhost:',host,ip)
-    socket_server.bind(('192.168.1.104',port))
+    print('localhost:', host, ip)
+
+    print('sock   address      ---->', (s.getsockname()[0], port))
+    socket_server.bind((s.getsockname()[0], port))
+    s.close()
     data,CANaddr = socket_server.recvfrom(1024)
     print('CAN connected',data,CANaddr)
     CANRecvThread=threading.Thread(target=CANRecv,args=(socket_server,CANaddr))
@@ -51,7 +59,7 @@ def CANRecv (socket_server,CANaddr) :
             else :
                 print('err Recv')
         except  TimeoutError :
-            print('disconnect')
+            print('can disconnect')
 
 def CANHand () :
     'CAN处理'
@@ -73,12 +81,14 @@ def CANHand () :
                     #print('data_object_request',msg)
                 else :
                     print('Node',CAN_Analysis.getFunctionCode(msg),' can not identify !')
-            else :
-                #print('data_obj',msg)
+            else :  
                 data_obj = CAN_Analysis.dataAnalyse(msg)
-                if data_obj !=None :
+                if data_obj !=None and data_obj!= {}:
                     serverSendQueue.put(data_obj)
-
+                    # print('data_obj',data_obj)
+                    with open('data_object.pickle', 'wb') as f:
+                        # Pickle the 'data' dictionary using the highest protocol available.
+                        pickle.dump(data_obj, f, pickle.HIGHEST_PROTOCOL)
 def serverSend():
     '上传数据'
     print(threading.current_thread().name,'serverSend is running...')
@@ -92,21 +102,27 @@ def serverSend():
         except :
             pass
 
-def watchDog () :
+def timer() :
     '定时任务'
-    global dog_cnt
+    global timer_cnt
     if exit_flag != True :
-        watchDogThread=threading.Timer(0.01,watchDog)
-        watchDogThread.start()
-        dog_cnt += 1
-        if dog_cnt >0xffffffff :
-            dog_cnt = 0
-        if(dog_cnt%1000 == 1) :
+        timerThread=threading.Timer(0.01,timer)
+        timerThread.start()
+        timer_cnt += 1
+        if timer_cnt >0xffffffff :
+            timer_cnt = 0
+        if(timer_cnt%1000 == 1) :
             CAN_Analysis.nodeMonitor()
-        if(dog_cnt%5 == 1) :
+        if(timer_cnt%5 == 1) :
             CAN_Analysis.timeoutHandler()
 
-serverSendQueue=queue.Queue()
+try:
+    with open('data_object.pickle', 'rb') as f:
+        # The protocol version used is detected automatically, so we do not
+        # have to specify it.
+        serverSendQueue = pickle.load(f)
+except:
+    serverSendQueue = queue.Queue()
 
 @asyncFunc
 def CANCommunication():
@@ -121,7 +137,8 @@ def CANCommunication():
         CANHandThread.start()
         serverSendThread=threading.Thread(target=serverSend)
         serverSendThread.start()
-        watchDog()
+
+        timer()
         while(True) :
             cmd=input ('Press enter to exit...\n')
             if cmd == 'open' :
@@ -142,19 +159,30 @@ def CANCommunication():
         exit()
     except:
         return False
+
+# print('before init')
+# CAN_Analysis.sysInit()
+# print("sys init")
+# CANSocketThread = threading.Thread(target=CANSocket)
+# CANSocketThread.start()
+# CANHandThread = threading.Thread(target=CANHand)
+# CANHandThread.start()
+# serverSendThread = threading.Thread(target=serverSend)
+# serverSendThread.start()
+
 def setDeviceStatus(cmd):
     '设定测定站状态，[[nodeId,"open_device"],[nodeId,"close_device"]]'
     try:
         for i in cmd:
-            CAN_Analysis.deviceStart(i[0],i[1])
+            CAN_Analysis.deviceStart(int(i[0]),i[1])
         return True
     except:
         return False
 
 def getDeviceStatus(nodeId):
-    '获得测定站状态,返回["ON","00000"]'
+    '获得测定站状态,返回["ON","00000"]获取一个'
     try:
-        status = CAN_Analysis.device_status[nodeId]
+        status = CAN_Analysis.device_status[str(int(nodeId))]
         res=[]
         if status['work_status'] == 'OFF':
             res[0] = 'OFF'

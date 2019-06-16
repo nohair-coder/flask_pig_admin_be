@@ -7,6 +7,7 @@ def dataPost(json_object) :
 		ack=json.loads(r.text)
 		if(ack['success'] != True):
 			print('dataPost',ack)
+			print('dataPost err',json_object)
 			return False
 		else:
 			return True

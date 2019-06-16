@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+# coding: utf8
 import time, queue, json, threading
 from app.CAN import UsrCAN, HttpHandle
 
-USE_EXTENDED_FRAME = False
-FUN_CODE_BIT = 7
-FUN_CODE_DICT = {  # 远程帧时的功能码
+USE_EXTENDED_FRAME = False      #使用标准帧
+FUN_CODE_BIT = 7                #节点所占用位数
+FUN_CODE_DICT = {               # 远程帧时的功能码
     'heart_beat': 0,
     'data_object_request': 1,
     'time_stamp_request': 2,
@@ -14,7 +14,7 @@ FUN_CODE_DICT = {  # 远程帧时的功能码
     'train_device': 6,
     'test_device': 7
 }
-DEVICE_STATUS_CODE = ['00001', 'OFF', 'ON', '00002', '00003', '00004', '00005', '00006', '00007']
+DEVICE_STATUS_CODE = ['00001', 'OFF', 'ON', '00002', '00003', '00004', '00005', '00006', '00007', '00008']
 device_status = {}  # 设备缓存
 data_Receiving = 0  # 接收状态
 dog_count = 0  # 超时计数
@@ -27,11 +27,9 @@ def getFunctionCode(msg):
     '获取功能码'
     return msg.arbitration_id >> FUN_CODE_BIT
 
-
 def getNodeID(msg):
     '获取节点'
-    return msg.arbitration_id & 0x7f
-
+    return msg.arbitration_id & (1<<(FUN_CODE_BIT+1)-1)
 
 def syncTime(msg):
     '同步时间'
@@ -71,7 +69,7 @@ def dataAnalyse(msg):
             device_status[str(node_id)]['frame'].append(msg.data)  # 记录数据
             device_status[str(node_id)]['frame_status'] += 1  # 帧计数
             dog_count = 2  # 超时标志清除
-        elif msg.data[0] == device_status[str(node_id)]['frame_status']:  # 最后一帧并且和帧数正确
+        elif msg.data[0] == device_status[str(node_id)]['frame_status']:  # 最后一帧并且帧数正确
             id_ack = node_id | FUN_CODE_DICT['recv_complete'] << FUN_CODE_BIT  # 生成应答ID
             jsontext = ''
             try:
@@ -87,7 +85,7 @@ def dataAnalyse(msg):
                 data_object['stationid'] = '{:0>12d}'.format(node_id)  # 12位
                 data_object['earid'] = '{:0>12d}'.format(int(data_object['earid']))  # 12位
                 CANSendQueue.put(
-                    UsrCAN.Message(arbitration_id=id_ack, extended_id=USE_EXTENDED_FRAME, is_remote_frame=True))
+                    UsrCAN.Message(arbitration_id=id_ack, extended_id=USE_EXTENDED_FRAME, is_remote_frame=True))	#发送成功接收应答
             # print(data_object['stationid'],'ok')
             except UnicodeDecodeError:
                 print('UnicodeDecodeError')
@@ -107,7 +105,7 @@ def dataAnalyse(msg):
 
 
 def clearTemp():
-    '接收态解除'
+    '解除接收态'
     global data_Receiving
     device_status[str(data_Receiving)]['frame'] = []
     device_status[str(data_Receiving)]['frame_status'] = 0
@@ -129,7 +127,7 @@ def timeoutHandler():
 
 
 def network_management(msg):
-    '节点监控'
+    '节点状态'
     global device_status
     node_id = getNodeID(msg)
     if str(node_id) not in device_status:  # 新建一个设备缓存
@@ -149,13 +147,14 @@ def network_management(msg):
 
 
 def nodeMonitor():
-    '节点监控子函数'
+    '节点监控定时函数'
+    # 此函数由定时任务调用
     global device_status
     for i in device_status:
         if device_status[i]['can_status'] > 0:  # 设备在线
             device_status[i]['can_status'] -= 1
         elif i != '255':  # 设备断线
-            device_status[i]['work_status'] = DEVICE_STATUS_CODE[0]
+            device_status[i]['work_status'] = DEVICE_STATUS_CODE[9]
 
         if device_status[i]['work_status'] != device_status[i]['put_status']:  # 本地状态和服务器状态不一致
             json_object = {
@@ -178,31 +177,31 @@ def nodeMonitor():
 
 
 def promiseRequest(msg):
-    '数据包发送请求'
+    '处理数据包发送请求'
     global data_Receiving  # 如果是0表示非接收态，否则等于正在发送的节点ID
     global dog_count
     global device_status
     node_id = getNodeID(msg)
-    if str(node_id) in device_status:
+    if str(node_id) in device_status:	#设备已运行然后接收到数据
         if data_Receiving != 0:
-            dataRequestQueue.put(msg)
+            dataRequestQueue.put(msg)		#接收任务阻塞中，暂存队列
         # print(msg,'received but can not handle')
         elif time.time() - msg.timestamp < 2 and device_status[str(node_id)]['can_status'] > 0:  # 等待时间不超过2秒，并且CAN设备在线
             CANSendQueue.put(
                 UsrCAN.Message(arbitration_id=msg.arbitration_id, extended_id=USE_EXTENDED_FRAME, is_remote_frame=True))
-            data_Receiving = getNodeID(msg)
+            data_Receiving = getNodeID(msg)	#开始接收
             dog_count = 2
         # print(msg.arbitration_id,' start handle')
         else:
-            print("Can't handle it", node_id, data_Receiving)
+            print("Can't handle it", node_id, data_Receiving)	#超时不接收
 
 def sysInit():
-    '系统设备初始化'
+    '设备状态初始化'
     global device_status
     with open('./sys_info.txt', 'r') as fin:
         try:
             text = fin.read()
-            print(text)
+            # print(text)
             device_status = json.loads(text)
         except json.decoder.JSONDecodeError:
             print('sys_info create')

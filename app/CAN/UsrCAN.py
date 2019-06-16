@@ -215,12 +215,14 @@ class Message(object):
 	def __format__(self, format_spec):
 		return self.__str__()
 	def msg2byte(self):
+		'消息转字节'
 		databyte=bytearray(13)
 		databyte[0]=self.is_extended_id<<7|self.is_remote_frame<<6|self.dlc
 		databyte[4:0:-1]=struct.pack('i', self.arbitration_id)
 		databyte[5:13]=self.data
 		return databyte
 	def byte2msg(self,databyte):
+		'字节转消息'
 		# print(list(databyte))
 		self.arbitration_id=struct.unpack('i',databyte[4:0:-1])[0]
 		self.dlc=databyte[0]&0x0f
