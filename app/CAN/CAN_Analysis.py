@@ -29,7 +29,7 @@ def getFunctionCode(msg):
 
 def getNodeID(msg):
     '获取节点'
-    return msg.arbitration_id & (1<<(FUN_CODE_BIT+1)-1)
+    return msg.arbitration_id &((1<<FUN_CODE_BIT)-1)
 
 def syncTime(msg):
     '同步时间'
@@ -46,6 +46,8 @@ def syncTime(msg):
 
 def deviceStart(node_id, cmd):
     '上位机命令'
+    global device_status
+    print(device_status)
     if cmd == 'open_device':
         id_cmd = node_id | FUN_CODE_DICT['open_device'] << FUN_CODE_BIT
     elif cmd == 'close_device':
@@ -144,7 +146,7 @@ def network_management(msg):
     device_status[str(node_id)]['can_status'] = 2
     CANSendQueue.put(
         UsrCAN.Message(arbitration_id=msg.arbitration_id, extended_id=USE_EXTENDED_FRAME, is_remote_frame=True, dlc=0))
-
+    # print("device_status",device_status)
 
 def nodeMonitor():
     '节点监控定时函数'
@@ -172,9 +174,9 @@ def nodeMonitor():
             HttpHandle.devicePut(json_object)  # 修改服务器记录
             device_status[i]['put_status'] = device_status[i]['work_status']
     with open('sys_info.txt', 'w') as fou:
-        fou.truncate()
+        # fou.truncate()
         fou.write(json.dumps(device_status))
-
+    print("device_status:",device_status)
 
 def promiseRequest(msg):
     '处理数据包发送请求'

@@ -1,28 +1,27 @@
 # coding: utf8
 import queue, socket, time, threading, pickle
 from app.CAN import UsrCAN, CAN_Analysis, HttpHandle
-from app.common.util import asyncFunc
 exit_flag = False
 timer_cnt=0
 
 def CANSocket() :
     'CAN Socket 初始化'
     global socket_server,CANaddr
+    port = 40001
     socket_server = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    # s.connect(('8.8.8.8', 80))
-    # print('socket_server.getsockname()', socket_server.getsockname())
+    s.connect(('8.8.8.8', 80))
+    print('socket_server.getsockname()', socket_server.getsockname())
 
-    host = socket.gethostname()
-    ip = socket.gethostbyname(host)
-    port = 40001
-    print('localhost:', host, ip)
+    # host = socket.gethostname()
+    # ip = socket.gethostbyname(host)
+    # print('localhost:', host, ip)
 
-    # print('sock   address      ---->', (s.getsockname()[0], port))
+    print('sock   address      ---->', (s.getsockname()[0], port))
     socket_server.bind(('192.168.1.104', port))
-    s.close()
+    # s.close()
     data,CANaddr = socket_server.recvfrom(1024)
-    print('CAN connected',data,CANaddr)
+    print('CAN connected',CANaddr)
     CANRecvThread=threading.Thread(target=CANRecv,args=(socket_server,CANaddr))
     CANSendThread=threading.Thread(target=CANSend,args=(socket_server,CANaddr))
     CANRecvThread.start()
@@ -37,7 +36,7 @@ def CANSend (socket_server,CANaddr) :
     databyte=bytearray()
     while exit_flag != True :
         msg=CAN_Analysis.CANSendQueue.get(block=True)
-        # print("Send:",msg)
+        print("Send:",msg," to ",CANaddr)
         databyte=msg.msg2byte()
         socket_server.sendto(databyte,CANaddr)
 
@@ -52,7 +51,7 @@ def CANRecv (socket_server,CANaddr) :
                     msg=UsrCAN.Message()
                     msg.byte2msg(databyte[i*13:i*13+13])
                     if msg.arbitration_id!=0 :
-                        # print(msg)
+                        print(msg)
                         CAN_Analysis.CANRecvQueue.put(msg)
                     else :
                         print("Recvive 0 error")
@@ -124,51 +123,51 @@ try:
 except:
     serverSendQueue = queue.Queue()
 
-@asyncFunc
-def CANCommunication():
-    'CAN模块，阻塞型'
-    try:
-        print('before init')
-        CAN_Analysis.sysInit()
-        print("sys init")
-        CANSocketThread=threading.Thread(target=CANSocket)
-        CANSocketThread.start()
-        CANHandThread=threading.Thread(target=CANHand)
-        CANHandThread.start()
-        serverSendThread=threading.Thread(target=serverSend)
-        serverSendThread.start()
+# @asyncFunc
+# def CANCommunication():
+#     'CAN模块，阻塞型'
+#     try:
+#         print('before init')
+#         CAN_Analysis.sysInit()
+#         print("sys init")
+#         CANSocketThread=threading.Thread(target=CANSocket)
+#         CANSocketThread.start()
+#         CANHandThread=threading.Thread(target=CANHand)
+#         CANHandThread.start()
+#         serverSendThread=threading.Thread(target=serverSend)
+#         serverSendThread.start()
 
-        timer()
-        while(True) :
-            cmd=input ('Press enter to exit...\n')
-            if cmd == 'open' :
-                CAN_Analysis.deviceStart(9,'open_device')
-            elif cmd == 'close' :
-                CAN_Analysis.deviceStart(9,'close_device')
-            elif cmd == 'test' :
-                CAN_Analysis.deviceStart(9,'test_device')
-            elif cmd == 'train' :
-                CAN_Analysis.deviceStart(9,'train_device')
-            elif cmd == 'exit' :
-                print('exit system ...')
-                break
-        CANHandThread.join()
-        CANSocketThread.join()
-        serverSendThread.join()
-        time.sleep(3+1)
-        exit()
-    except:
-        return False
+#         timer()
+#         while(True) :
+#             cmd=input ('Press enter to exit...\n')
+#             if cmd == 'open' :
+#                 CAN_Analysis.deviceStart(9,'open_device')
+#             elif cmd == 'close' :
+#                 CAN_Analysis.deviceStart(9,'close_device')
+#             elif cmd == 'test' :
+#                 CAN_Analysis.deviceStart(9,'test_device')
+#             elif cmd == 'train' :
+#                 CAN_Analysis.deviceStart(9,'train_device')
+#             elif cmd == 'exit' :
+#                 print('exit system ...')
+#                 break
+#         CANHandThread.join()
+#         CANSocketThread.join()
+#         serverSendThread.join()
+#         time.sleep(3+1)
+#         exit()
+#     except:
+#         return False
 
-# print('before init')
-# CAN_Analysis.sysInit()
-# print("sys init")
-# CANSocketThread = threading.Thread(target=CANSocket)
-# CANSocketThread.start()
-# CANHandThread = threading.Thread(target=CANHand)
-# CANHandThread.start()
-# serverSendThread = threading.Thread(target=serverSend)
-# serverSendThread.start()
+CAN_Analysis.sysInit()
+print("CANsys init")
+CANSocketThread = threading.Thread(target=CANSocket)
+CANSocketThread.start()
+CANHandThread = threading.Thread(target=CANHand)
+CANHandThread.start()
+serverSendThread = threading.Thread(target=serverSend)
+serverSendThread.start()
+timer()
 
 def setDeviceStatus(cmd):
     '设定测定站状态，[[nodeId,"open_device"],[nodeId,"close_device"]]'
@@ -176,7 +175,8 @@ def setDeviceStatus(cmd):
         for i in cmd:
             CAN_Analysis.deviceStart(int(i[0]),i[1])
         return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 def getDeviceStatus(nodeId):

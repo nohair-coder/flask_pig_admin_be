@@ -197,8 +197,6 @@ def set_station():
         setting_pairs = request_data.get('settingPairs') # [[stationid, status]] status => close_device or open_device
         if len(setting_pairs) > 0:
 
-            print(setting_pairs)
-
             setDeviceStatus(setting_pairs)
             return success_response()
         else:

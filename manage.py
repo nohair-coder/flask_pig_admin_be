@@ -13,5 +13,3 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(filename='./log.txt',
                             format='%(asctime)s - %(funcName)s - line: %(lineno)d - %(levelname)s - %(message)s')
-
-    app.run(port=5000) # 这让你的操作系统监听所有公开的 IP
