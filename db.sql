@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost:8889
--- 生成日期： 2019-05-29 05:05:28
+-- 生成日期： 2019-06-22 06:39:06
 -- 服务器版本： 5.7.23
 -- PHP 版本： 7.2.10
 
@@ -11,7 +11,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- 数据库： `pig`
+-- 数据库： `pig_forgraduation`
 --
 
 -- --------------------------------------------------------
@@ -3814,20 +3814,6 @@ INSERT INTO `station_info` (`id`, `stationid`, `comment`, `status`, `changetime`
 -- --------------------------------------------------------
 
 --
--- 表的结构 `station_timer`
---
-
-CREATE TABLE `station_timer` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `stationid` char(12) NOT NULL COMMENT '测定站 id',
-  `type` enum('on','off') NOT NULL COMMENT 'on 开启机器的指令',
-  `exe_time` int(10) NOT NULL COMMENT '指令执行时间',
-  `created_time` int(10) NOT NULL COMMENT '记录创建时间'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='测定站启停定时表';
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `syscfg`
 --
 
@@ -3845,7 +3831,7 @@ CREATE TABLE `syscfg` (
 INSERT INTO `syscfg` (`name`, `comment`, `value`, `created_time`) VALUES
 ('FAC_NUM', '系统设置-猪场代码', 'hzau', 0),
 ('PIG_BASE_DATA_ALLOWED_FIELDS', '基础数据页面允许选择显示的所有字段', 'earid,animalnum,stationid,food_intake,weight,body_long,body_width,body_height,body_temp,env_temp,env_humi,start_time,end_time,sys_time,duration', 0),
-('PIG_BASE_DATA_FIELDS', '基础数据页面允许显示的字段', 'earid,food_intake,animalnum,end_time,duration,stationid,start_time', 0),
+('PIG_BASE_DATA_FIELDS', '基础数据页面允许显示的字段', 'earid,food_intake,animalnum,duration,stationid,start_time,end_time', 0),
 ('SHOW_SELECT_LANGUAGE', '系统设置-显示选择语言', 'false', 0),
 ('SHOW_TIME_SYNC', '系统设置-显示时间同步区域', 'false', 0),
 ('PIG_DAILY_INTAKE_START_TIME', '日采食开始计算的时间，测定站第二日首次采食数据统计，四位数字（2位小时2位分钟）（0800 点整）', '0800', 0),
@@ -3875,7 +3861,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `username`, `password`, `token`, `phone`, `email`, `rank`, `created_time`, `last_login_time`) VALUES
 (7, 'lxfriday', '9a6f6b5aa85c259f683441ed17e1862558e88e33ddd17ec12d5b75cad733d9a4', 'bbf5531ac09974c36e4165c10db98e92fc821f78e7a70854e237f9fad005bd40', '15623401867', '3248184446@qq.com', 'common', 1556328197, 1557824068),
-(6, 'root', '0d7890f1bfb827c8f7f45057f5ab32f88f573ade592b16c15c0e29dc7851b2da', '946e0f4228641bc2fb2c60e7eef7c5610934dd73abb3b840b5513701565b44a7', '18627825090', 'liu3248184446@outlook.com', 'super', 1555127195, 1558694826);
+(6, 'root', '0d7890f1bfb827c8f7f45057f5ab32f88f573ade592b16c15c0e29dc7851b2da', '4ca951aee3edd127331d01806c63f8a97f619fd7f551eead37954a26cc699fbc', '18627825090', 'liu3248184446@outlook.com', 'super', 1555127195, 1559796834);
 
 -- --------------------------------------------------------
 
@@ -3946,13 +3932,6 @@ ALTER TABLE `station_errorcode_reference`
 --
 ALTER TABLE `station_info`
   ADD PRIMARY KEY (`id`);
-
---
--- 表的索引 `station_timer`
---
-ALTER TABLE `station_timer`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Uni_stationid` (`stationid`);
 
 --
 -- 表的索引 `syscfg`
@@ -4028,12 +4007,6 @@ ALTER TABLE `station_errorcode_reference`
 --
 ALTER TABLE `station_info`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- 使用表AUTO_INCREMENT `station_timer`
---
-ALTER TABLE `station_timer`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user`

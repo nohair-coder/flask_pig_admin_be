@@ -24,7 +24,7 @@ from .common.memory.piglist import initialize_piglist
 from .common.memory.daily_intake_start_time import initialize_intake_start_time
 from .common.memory.daily_first_intake_record import initialize_daily_first_intake_record
 from .common.memory.pig_daily_assess_record import initialize_pig_daily_assess_record
-from app.CAN.Raspi_CAN import getDeviceStatus, setDeviceStatus
+from app.CAN.Raspi_CAN import getDeviceStatus
 from app.common.sync.sync_stationinfo import sync_stationinfo
 
 # 从数据库初始化信息到内存中，方便直接进行比对

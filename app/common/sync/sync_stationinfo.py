@@ -5,6 +5,7 @@
 from threading import Timer
 from app.models import StationInfo
 from app.common.util import get_now_time
+from app.CAN.Raspi_CAN import getDeviceStatus
 
 def sync_stationinfo():
     '''
@@ -19,7 +20,7 @@ def sync_stationinfo():
     station_running_info_list = get_all_station_running_info(original_station_list)
     # 将最新的状态数据更新到数据库
     update_all_station_running_info(station_running_info_list)
-    Timer(5, sync_stationinfo).start() # 执行定时处理
+    Timer(30, sync_stationinfo).start() # 执行定时处理
 
 
 def update_all_station_running_info(station_running_info_list):
@@ -36,6 +37,7 @@ def get_all_station_running_info(original_station_list):
         stationid = v.stationid
         # 获取到单个测定站的状态
         info = getDeviceStatus(stationid)
+        print('从连接程序获取测定站状态 <--------->', info)
         # 构建数据库相同的字段，直接写入
         station_running_info_list.append({
             'stationid': stationid,
@@ -44,9 +46,9 @@ def get_all_station_running_info(original_station_list):
         })
     return station_running_info_list
 
-def getDeviceStatus(stationid):
-    '''
-    从 CAN 通信模块获取到测定站的数据
-    :return:
-    '''
-    return ['ON', '00000']
+# def getDeviceStatus(stationid):
+#     '''
+#     从 CAN 通信模块获取到测定站的数据
+#     :return:
+#     '''
+#     return ['ON', '00000']

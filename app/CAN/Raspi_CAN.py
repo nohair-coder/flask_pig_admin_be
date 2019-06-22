@@ -182,17 +182,20 @@ def setDeviceStatus(cmd):
 def getDeviceStatus(nodeId):
     '获得测定站状态,返回["ON","00000"]获取一个'
     try:
-        status = CAN_Analysis.device_status[str(int(nodeId))]
-        res=[]
+        not_exit_station_statue = {
+            'work_status': 'OFF'
+        }
+
+        status = CAN_Analysis.device_status.get(str(int(nodeId)), not_exit_station_statue)
+
         if status['work_status'] == 'OFF':
-            res[0] = 'OFF'
-            res[1] = '00000'
+            res = ['OFF', '00000']
         elif status['work_status'] == 'ON':
-            res[0] = 'ON'
-            res[1] = '00000'
+            res = ['ON', '00000']
         else:
-            res[0] == 'ON'
-            res[1] = status['work_status']
+            res = ['ON', status['work_status']]
         return res
-    except:
+    except Exception as e:
+        print('获取测定站状态失败 ----------------->>>')
+        print(e)
         return False
